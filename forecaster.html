@@ -136,16 +136,15 @@
       <a href="index.html" style="color:var(--accent);text-decoration:none">Overview</a> &middot;
       <a href="sizing.html" style="color:var(--accent);text-decoration:none">Position sizing</a></p>
     <h1>Short-horizon volatility &mdash; busy-window forecaster</h1>
-    <p class="pagenote">Probability that the next 10-second ES window is busy (top third of
-      realized volatility), from the order-flow state. Research model on one 14-day window;
-      transparent surrogate, out-of-sample AUC 0.892.</p>
+    <p class="pagenote">The estimated chance the next 10 seconds is busy (top third by volatility),
+      from the current order flow. 14-day research model, out-of-sample AUC 0.89.</p>
   </div>
 
   <div class="board">
     <!-- controls -->
     <div class="panel ctrls">
       <h2>Order-flow drivers</h2>
-      <p class="hint">Values start at the typical (median) tape. Try a preset, or drag any driver.</p>
+      <p class="hint">Start from a typical tape, or drag any driver.</p>
       <div class="presets" id="presets">
         <button data-p="median">Typical tape</button>
         <button data-p="calm">Calm tape</button>
@@ -174,7 +173,7 @@
     <div class="rhead">
       <div>
         <h2>Replay a real session</h2>
-        <p class="hint" id="rdate" style="margin:2px 0 0">streaming a recorded ES day through the model, tick by tick</p>
+        <p class="hint" id="rdate" style="margin:2px 0 0">a recorded ES day, run through the model</p>
       </div>
       <div class="rctl" style="flex-wrap:wrap">
         <div class="seg" id="dayseg" aria-label="session date"></div>

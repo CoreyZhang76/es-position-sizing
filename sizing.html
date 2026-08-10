@@ -145,41 +145,39 @@
         <button data-sig="long" aria-pressed="true">
           <span class="sn">Buy &amp; hold</span><span class="sd">always long</span></button>
         <button data-sig="trend">
-          <span class="sn">Trend</span><span class="sd">long when 200-day return &gt; 0, else flat</span></button>
+          <span class="sn">Trend</span><span class="sd">long in an uptrend (200-day)</span></button>
         <button data-sig="mom">
-          <span class="sn">Momentum</span><span class="sd">long when the 12-month return &gt; 0, else flat</span></button>
+          <span class="sn">Momentum</span><span class="sd">long after a positive year (12-month)</span></button>
         <button data-sig="dip">
-          <span class="sn">Mean-reversion</span><span class="sd">buy after a 5-day dip, else flat</span></button>
+          <span class="sn">Mean-reversion</span><span class="sd">buy after a 5-day dip</span></button>
       </div>
 
       <h2 style="margin-top:18px">Sizing method</h2>
       <div class="seg" id="sizeseg">
         <button data-mode="vt" aria-pressed="true">
-          <span class="sn">Vol-targeted</span><span class="sd">scale by the vol forecast every day</span></button>
+          <span class="sn">Vol-targeted</span><span class="sd">scaled by the vol forecast</span></button>
         <button data-mode="cond">
-          <span class="sn">Conditional</span><span class="sd">de-risk only in down-trends, else hold fixed</span></button>
+          <span class="sn">Conditional</span><span class="sd">de-risk only in down-trends</span></button>
       </div>
 
       <div class="fld">
         <div class="lab"><span class="t">Target volatility</span><span class="v" id="tvLab">10%</span></div>
         <input type="range" id="tv" min="6" max="18" step="1" value="10">
-        <p class="hint">The risk level both lines aim for.</p>
+        <p class="hint">The risk level both lines target.</p>
       </div>
 
       <div class="fld">
         <div class="lab"><span class="t">Leverage cap</span><span class="v" id="capLab">3.0&times;</span></div>
         <input type="range" id="cap" min="1" max="4" step="0.5" value="3">
-        <p class="hint">Position ceiling when the market looks very calm.</p>
+        <p class="hint">Cap on position size in calm markets.</p>
       </div>
     </div>
   </div>
 
   <p class="foot">
-    <code>position = signal &times; min(target vol &divide; forecast vol, cap)</code>. Both lines carry
-    the same average risk. <b>Vol-targeted</b> scales every day &mdash; risk control: steadier vol and
-    smaller drawdowns at about the same Sharpe. <b>Conditional</b> de-risks only in down-trends,
-    keeping fixed's return while still cutting the worst drawdowns. All three signals have real
-    standalone edge. Causal, no lookahead. Illustration, not a live track record.
+    <code>position = signal &times; min(target vol &divide; forecast vol, cap)</code>. Both lines take
+    the same average risk; the sizing controls risk, it does not add return. Real S&amp;P 500 futures,
+    no lookahead. Illustration, not a live track record.
     &nbsp;&middot;&nbsp; <a href="https://github.com/CoreyZhang76/order-flow-volatility">Code &amp; methodology</a>
   </p>
 </div>
