@@ -144,6 +144,8 @@
           <span class="sn">Buy &amp; hold</span><span class="sd">always long</span></button>
         <button data-sig="trend">
           <span class="sn">Trend</span><span class="sd">long when 200-day return &gt; 0, else flat</span></button>
+        <button data-sig="mom">
+          <span class="sn">Momentum</span><span class="sd">long when the 12-month return &gt; 0, else flat</span></button>
         <button data-sig="dip">
           <span class="sn">Mean-reversion</span><span class="sd">buy after a 5-day dip, else flat</span></button>
       </div>
@@ -197,6 +199,7 @@ var DATA={"dates":["20100608","20100609","20100610","20100611","20100613","20100
     for(var i=0;i<N;i++){
       if(name==='long') s[i]=1;
       else if(name==='trend') s[i]= (i>=199 && trail(i,200)>0)?1:0;
+      else if(name==='mom') s[i]= (i>=250 && trail(i,250)>0)?1:0;
       else /*dip*/       s[i]= (i>=5 && trail(i,5)<0)?1:0;
     }
     return s;
