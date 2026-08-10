@@ -8,162 +8,102 @@
 <body>
 <style>
   :root{
-    --bg:#edf0f1;--surface:#ffffff;--surface-2:#f4f6f7;--line:#d7dde1;
-    --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;
-    --accent:#009cde;--calm:#2f8f5b;--busy:#c85a1e;
-    --shadow:0 1px 2px #0126430f,0 6px 16px #0126430a;
+    --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
+    --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
+    --shadow:0 1px 2px #0126430f,0 5px 14px #0126430a;
     --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
     --mono:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.55;
+  body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.6;
     -webkit-font-smoothing:antialiased}
-  h1,h2,h3{color:var(--ink)}
-  .wrap{max-width:900px;margin:0 auto;padding:28px 20px 64px}
-  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  h1,h2{color:var(--ink)}
+  .wrap{max-width:780px;margin:0 auto;padding:30px 22px 60px}
 
-  .pagehead{margin-bottom:20px}
   .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink-3);margin:0 0 8px}
-  h1{font-size:clamp(23px,3.4vw,31px);line-height:1.12;margin:0 0 8px;font-weight:650;
-    letter-spacing:-.01em;text-wrap:balance}
-  .sub{font-size:15px;color:var(--ink-2);margin:0;max-width:66ch}
+    color:var(--ink-3);margin:0 0 10px}
+  h1{font-size:clamp(22px,3.2vw,28px);line-height:1.15;margin:0 0 8px;font-weight:650;
+    letter-spacing:-.01em}
+  .sub{font-size:15px;color:var(--ink-2);margin:0 0 14px;max-width:64ch}
+  .nav{font-size:14px;margin:0}
+  .nav a{color:var(--accent);text-decoration:none;font-weight:600}
+  .nav a:hover{text-decoration:underline}
 
-  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 8px}
-  @media(max-width:640px){.tiles{grid-template-columns:1fr}}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 6px}
+  @media(max-width:620px){.tiles{grid-template-columns:1fr}}
   .tile{background:var(--surface);border:1px solid var(--line);border-radius:2px;
-    box-shadow:var(--shadow);padding:16px 16px 14px}
-  .tile .n{font-family:var(--mono);font-size:30px;font-weight:650;color:var(--accent);
-    letter-spacing:-.02em;line-height:1}
-  .tile .l{font-size:12.5px;color:var(--ink-2);margin-top:8px;line-height:1.4}
+    box-shadow:var(--shadow);padding:18px 16px}
+  .tile .n{font-family:var(--mono);font-size:26px;font-weight:650;color:var(--ink);
+    letter-spacing:-.01em;line-height:1}
+  .tile .l{font-size:12.5px;color:var(--ink-2);margin-top:10px}
 
-  section{margin-top:26px}
-  h2{font-size:17px;margin:0 0 4px;font-weight:640}
-  .lead{font-size:14.5px;color:var(--ink-2);margin:0 0 12px;max-width:74ch}
+  section{margin-top:28px}
+  h2{font-size:15px;margin:0 0 10px;font-weight:640;padding-bottom:7px;
+    border-bottom:1px solid var(--line)}
+  ul{margin:0;padding-left:20px}
+  li{margin:7px 0;font-size:14.5px;color:var(--ink-2)}
+  li b{color:var(--ink);font-weight:600}
 
-  .rows{display:flex;flex-direction:column;gap:11px}
-  .item{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;
-    background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:13px 15px}
-  .item .k{font-family:var(--mono);font-weight:650;color:var(--accent);font-size:15px}
-  .item .t{font-size:14px;color:var(--ink-2)}
-  .item .t b{color:var(--ink)}
-
-  .neg .k{color:var(--busy)}
-  .neg .item{background:var(--surface-2)}
-
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
-  @media(max-width:640px){.two{grid-template-columns:1fr}}
-  .col{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:15px 16px}
-  .col h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-    margin:0 0 10px;font-weight:600}
-  .col.now h3{color:var(--calm)}
-  .col.next h3{color:var(--ink-3)}
-  .col ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-2)}
-  .col li{margin:5px 0}
-
-  .callout{margin-top:26px;background:var(--surface);border:1px solid var(--line);
-    border-left:3px solid var(--accent);border-radius:2px;box-shadow:var(--shadow);padding:16px 18px}
-  .callout h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--ink-3);margin:0 0 8px;font-weight:600}
-  .callout p{margin:0;font-size:14.5px;color:var(--ink);line-height:1.55}
-
-  .foot{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;
-    color:var(--ink-3);line-height:1.6}
+  .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;
+    color:var(--ink-3)}
   .foot a{color:var(--accent);text-decoration:none;font-weight:600}
   .foot a:hover{text-decoration:underline}
 </style>
 
 <div class="wrap">
-  <div class="pagehead">
-    <p class="eyebrow">Hull Tactical &middot; Research</p>
-    <h1>Order-flow &amp; volatility research: what works, and what's deployable</h1>
-    <p class="sub">Short-horizon volatility is forecastable on ES. The honest edge is
-      <b style="color:var(--ink)">execution timing and risk management</b> driven by that forecast &mdash;
-      not a new directional alpha. Every number below is out-of-sample on real data, with error bars.</p>
-  </div>
-
-  <p style="margin:0 0 2px;font-size:14px"><b style="color:var(--ink)">Interactive tools:</b>
-    <a href="sizing.html" style="color:var(--accent);text-decoration:none;font-weight:600">Position sizing</a>
-    &nbsp;&middot;&nbsp;
-    <a href="forecaster.html" style="color:var(--accent);text-decoration:none;font-weight:600">Volatility forecaster</a></p>
+  <p class="eyebrow">Hull Tactical &middot; Research</p>
+  <h1>Order-flow and volatility research</h1>
+  <p class="sub">Forecasting short-term S&amp;P 500 futures volatility, and what it is useful for.
+    All results are out-of-sample on real data.</p>
+  <p class="nav">Tools: <a href="sizing.html">Position sizing</a> &middot;
+    <a href="forecaster.html">Volatility forecaster</a></p>
 
   <div class="tiles">
     <div class="tile"><div class="n">0.83&ndash;0.90</div>
-      <div class="l">Vol forecaster AUC, ranking the next seconds calm vs busy, out-of-sample</div></div>
+      <div class="l">Forecast accuracy (AUC), calm vs busy windows, out-of-sample</div></div>
     <div class="tile"><div class="n">~29%</div>
-      <div class="l">Less volatility traded through by timing execution into forecast-calm windows</div></div>
+      <div class="l">Less volatility traded through by timing execution</div></div>
     <div class="tile"><div class="n">~0.31</div>
-      <div class="l">Net Sharpe of the VRP carry (vol-targeted) &mdash; a real but modest premium</div></div>
+      <div class="l">Net Sharpe of the volatility-premium carry</div></div>
   </div>
 
   <section>
     <h2>What works</h2>
-    <div class="rows">
-      <div class="item"><div class="k">1</div><div class="t"><b>The vol forecaster.</b> Ranks the
-        next few seconds calm-vs-busy at AUC 0.83&ndash;0.90 on real ES, always out-of-sample. Most
-        of the power is HAR; order flow adds a real but modest short-horizon gain. This is the core
-        asset.</div></div>
-      <div class="item"><div class="k">2</div><div class="t"><b>Execution timing &mdash; the
-        deployable edge.</b> Trading in the forecast-calm third of windows cuts the volatility traded
-        through by ~29% (band 23&ndash;34%): about 0.8 bps/window less timing risk, and ~29% lower
-        market impact <b>if child orders are sized to volume (POV)</b> &mdash; a fixed clip into
-        thinner calm windows raises impact instead.</div></div>
-      <div class="item"><div class="k">3</div><div class="t"><b>VRP harvesting &mdash; a real but
-        modest premium.</b> The variance risk premium is large on our data (+6.2 vol points, positive
-        91% of days). A roll-aware short-vol carry nets ~0.31 Sharpe with &minus;27% drawdowns after
-        vol-targeting. A harvestable risk premium, not a high-Sharpe alpha &mdash; and it shares
-        equities' crash, so it does not diversify a long book.</div></div>
-    </div>
-  </section>
-
-  <section class="neg">
-    <h2>What we tested and dropped &mdash; honestly</h2>
-    <div class="rows">
-      <div class="item"><div class="k">&times;</div><div class="t"><b>Direction is not tradable.</b>
-        Flow predicts the next move's sign strongly out-of-sample, but the edge is sub-spread &mdash;
-        net of the bid-ask it is about zero.</div></div>
-      <div class="item"><div class="k">&times;</div><div class="t"><b>Sizing is not alpha.</b>
-        Vol-targeting does not beat fixed on Sharpe at matched risk (on ES the high-vol days pay);
-        it is drawdown / risk control. Conditional de-risking keeps Sharpe and cuts the tail.</div></div>
-      <div class="item"><div class="k">&times;</div><div class="t"><b>Cross-asset VIX adds nothing</b>
-        to short-horizon ES vol forecasting (level, change, and flow all null on this window). And
-        dispersion / VIX sector rotation are not runnable with our data and infrastructure.</div></div>
-    </div>
+    <ul>
+      <li><b>The forecaster.</b> Predicts whether the next few seconds are calm or busy, at an
+        accuracy (AUC) of 0.83 to 0.90 on real ES.</li>
+      <li><b>Execution timing.</b> Trading in the calm windows cuts the volatility traded through by
+        about 29%. Confirmed on the real order book, and a net saving for orders up to about 0.5% of
+        daily volume.</li>
+      <li><b>Volatility risk premium.</b> Real and large (VIX futures run 6.2 points above later
+        realized volatility, 91% of days). A short-volatility carry returns about 0.31 Sharpe after
+        sizing.</li>
+    </ul>
   </section>
 
   <section>
-    <h2>Where it stands</h2>
-    <div class="two">
-      <div class="col now"><h3>Deployable now</h3>
-        <ul>
-          <li>The vol forecaster on ES, on the CME feed we already have.</li>
-          <li>A forecast-calm execution scheduler, POV-sized, to cut timing risk and impact.</li>
-        </ul>
-      </div>
-      <div class="col next"><h3>Needs more</h3>
-        <ul>
-          <li>Book-replay sim now runs on real L10 data: calm-tilting is a net execution win for
-            small parents (&#8818;0.5% of daily volume); larger orders must spread over more days.</li>
-          <li>Real desk execution logs, or a desk-calibrated impact model (cross-team).</li>
-          <li>Cross-regime validation on more feature-store months; NQ / ZN cross-asset flow.</li>
-        </ul>
-      </div>
-    </div>
+    <h2>What did not work</h2>
+    <ul>
+      <li><b>Direction.</b> Predictable (88% of the time) but smaller than the spread, so about zero
+        after costs.</li>
+      <li><b>Position sizing.</b> Controls risk and drawdown; it does not add return.</li>
+      <li><b>Cross-asset VIX.</b> Adds nothing to the short-term ES forecast.</li>
+    </ul>
   </section>
 
-  <div class="callout">
-    <h3>The honest framing</h3>
-    <p>The value is execution and risk management on a working volatility forecast &mdash; not a new
-      directional alpha. That is a smaller claim than &ldquo;we found alpha,&rdquo; and it is one the
-      data supports end to end.</p>
-  </div>
+  <section>
+    <h2>Status</h2>
+    <ul>
+      <li><b>Deployable now.</b> The forecaster and a calm-window execution scheduler on ES.</li>
+      <li><b>Needs more.</b> Desk execution data to price the timing saving in dollars, and more
+        data months to test across regimes.</li>
+    </ul>
+  </section>
 
   <p class="foot">
-    Interactive tools: <a href="sizing.html">position sizing</a>
-    &middot; <a href="forecaster.html">vol forecaster</a>.
-    Full detail and methodology:
+    Tools: <a href="sizing.html">position sizing</a> &middot;
+    <a href="forecaster.html">volatility forecaster</a>. Methodology and full results:
     <a href="https://github.com/CoreyZhang76/order-flow-volatility">code &amp; findings</a>.
-    Research illustration, not investment advice.
   </p>
 </div>
 
