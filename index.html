@@ -52,9 +52,9 @@
 
 <div class="wrap">
   <p class="eyebrow">Hull Tactical &middot; Research</p>
-  <h1>Order-flow and volatility research</h1>
-  <p class="sub">Forecasting short-term S&amp;P 500 futures volatility, and what it is useful for.
-    All results are out-of-sample on real data.</p>
+  <h1>Forecasting and trading volatility</h1>
+  <p class="sub">How wide the range of outcomes is in the S&amp;P 500 &mdash; from the order book
+    (seconds) to the VIX term structure (months). All results are out-of-sample on real data.</p>
   <p class="nav">Tools: <a href="sizing.html">Position sizing</a> &middot;
     <a href="forecaster.html">Volatility forecaster</a></p>
 
@@ -63,8 +63,8 @@
       <div class="l">Forecast accuracy (AUC), calm vs busy windows, out-of-sample</div></div>
     <div class="tile"><div class="n">~29%</div>
       <div class="l">Less volatility traded through by timing execution</div></div>
-    <div class="tile"><div class="n">~0.31</div>
-      <div class="l">Net Sharpe of the volatility-premium carry</div></div>
+    <div class="tile"><div class="n">0.73</div>
+      <div class="l">Sharpe of the VIX calendar-spread trade (term structure)</div></div>
   </div>
 
   <section>
@@ -75,9 +75,10 @@
       <li><b>Execution timing.</b> Trading in the calm windows cuts the volatility traded through by
         about 29%. Confirmed on the real order book, and a net saving for orders up to about 0.5% of
         daily volume.</li>
-      <li><b>Volatility risk premium.</b> Real and large (VIX futures run 6.2 points above later
-        realized volatility, 91% of days). A short-volatility carry returns about 0.31 Sharpe after
-        sizing.</li>
+      <li><b>VIX term structure (current direction).</b> The volatility risk premium is real and large
+        (VIX futures run 6.2 points above later realized vol, 91% of days). Harvesting it with a
+        front/next calendar spread earns 0.73 Sharpe at about a quarter of the crash risk of a naked
+        short-volatility trade, and it diversifies a long-equity book.</li>
     </ul>
   </section>
 
