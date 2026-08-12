@@ -52,34 +52,35 @@
 
 <div class="wrap">
   <p class="eyebrow">Hull Tactical &middot; Research</p>
-  <h1>Forecasting and trading volatility</h1>
-  <p class="sub">How wide the range of outcomes is in the S&amp;P 500 &mdash; from the order book
-    (seconds) to the VIX term structure (months). All results are out-of-sample on real data.</p>
+  <h1>Trading the VIX term structure</h1>
+  <p class="sub">Trade the shape of the VIX curve to harvest the volatility premium while shedding
+    the crash &mdash; the top of a thread that runs from the order book (seconds) to the curve
+    (months). All results are out-of-sample on real data.</p>
   <p class="nav">Tools: <a href="sizing.html">Position sizing</a> &middot;
     <a href="forecaster.html">Volatility forecaster</a></p>
 
   <div class="tiles">
+    <div class="tile"><div class="n">&frac14;&times;</div>
+      <div class="l">The crash exposure of a naked short-vol trade, via the VIX calendar spread</div></div>
     <div class="tile"><div class="n">0.83&ndash;0.90</div>
       <div class="l">Forecast accuracy (AUC), calm vs busy windows, out-of-sample</div></div>
     <div class="tile"><div class="n">~29%</div>
       <div class="l">Less volatility traded through by timing execution</div></div>
-    <div class="tile"><div class="n">&frac14;&times;</div>
-      <div class="l">The crash exposure of a naked short-vol trade, via the VIX calendar spread</div></div>
   </div>
 
   <section>
     <h2>What works</h2>
     <ul>
-      <li><b>The forecaster.</b> Predicts whether the next few seconds are calm or busy, at an
-        accuracy (AUC) of 0.83 to 0.90 on real ES.</li>
+      <li><b>VIX term structure &mdash; the headline.</b> The volatility risk premium is real and large
+        (VIX futures run 6.2 points above later realized vol, 91% of days). A front/next calendar
+        spread harvests it at about a quarter of the crash risk of a naked short-volatility trade
+        (0.73 Sharpe gross, ~0.43 net of two-leg costs; ~0.73 net in the liquid ETF wrapper). The
+        durable win is structural &mdash; trade the shape, shed the crash &mdash; not a free Sharpe.</li>
+      <li><b>The forecaster (the foundation).</b> Predicts whether the next few seconds are calm or
+        busy, at an accuracy (AUC) of 0.83 to 0.90 on real ES.</li>
       <li><b>Execution timing.</b> Trading in the calm windows cuts the volatility traded through by
         about 29%. Confirmed on the real order book, and a net saving for orders up to about 0.5% of
         daily volume.</li>
-      <li><b>VIX term structure (current direction).</b> The volatility risk premium is real and large
-        (VIX futures run 6.2 points above later realized vol, 91% of days). A front/next calendar
-        spread harvests it at about a quarter of the crash risk of a naked short-volatility trade
-        (0.73 Sharpe gross, ~0.4 net of two-leg costs). The durable win is structural &mdash; far less
-        crash risk &mdash; not a free Sharpe.</li>
       <li><b>Micro to macro.</b> The two scales connect: the intraday forecaster's calm/busy call
         works as a risk filter for the term-structure trade &mdash; it flags when to step out of short
         volatility, cutting the naked short's drawdown from &minus;89% to &minus;62%. It flags the
