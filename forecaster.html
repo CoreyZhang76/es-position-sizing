@@ -40,6 +40,9 @@
   .pagehead{margin-bottom:8px}
   .pagehead h1{font-size:22px;margin:0 0 4px;letter-spacing:-.005em}
   .pagenote{font-size:13px;color:var(--ink-2);margin:0;max-width:74ch}
+  .nav{font-size:14px;margin:11px 0 0}
+  .nav a{color:var(--accent);text-decoration:none;font-weight:600}
+  .nav a:hover{text-decoration:underline}
 
   .board{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:22px;align-items:start}
   @media(max-width:820px){.board{grid-template-columns:1fr}}
@@ -132,13 +135,13 @@
 </header>
 <div class="wrap">
   <div class="pagehead">
-    <p class="eyebrow" style="margin:0 0 6px">Research &middot;
-      <a href="index.html" style="color:var(--accent);text-decoration:none">Overview</a> &middot;
-      <a href="term_structure.html" style="color:var(--accent);text-decoration:none">VIX term structure</a> &middot;
-      <a href="sizing.html" style="color:var(--accent);text-decoration:none">Position sizing</a></p>
+    <p class="eyebrow" style="margin:0 0 6px">Hull Tactical &middot; Research</p>
     <h1>Short-horizon volatility &mdash; busy-window forecaster</h1>
     <p class="pagenote">The estimated chance the next 10 seconds is busy (top third by volatility),
       from the current order flow. 14-day research model, out-of-sample AUC 0.89.</p>
+    <p class="nav"><a href="index.html">&larr; Overview</a> &nbsp;&middot;&nbsp;
+      <a href="term_structure.html">VIX term structure</a> &nbsp;&middot;&nbsp;
+      <a href="sizing.html">Position sizing</a></p>
   </div>
 
   <div class="board">

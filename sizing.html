@@ -29,6 +29,9 @@
   .pagehead h1{font-size:clamp(21px,3vw,27px);line-height:1.14;margin:0 0 6px;font-weight:650;
     letter-spacing:-.01em;text-wrap:balance}
   .pagenote{font-size:15px;color:var(--ink-2);margin:0;max-width:60ch;line-height:1.5}
+  .nav{font-size:14px;margin:11px 0 0}
+  .nav a{color:var(--accent);text-decoration:none;font-weight:600}
+  .nav a:hover{text-decoration:underline}
 
   .board{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:20px;align-items:start}
   @media(max-width:860px){.board{grid-template-columns:1fr}}
@@ -108,13 +111,13 @@
 
 <div class="wrap">
   <div class="pagehead">
-    <p class="eyebrow">Hull Tactical &middot; Research &middot;
-      <a href="index.html" style="color:var(--accent);text-decoration:none">Overview</a> &middot;
-      <a href="term_structure.html" style="color:var(--accent);text-decoration:none">VIX term structure</a> &middot;
-      <a href="forecaster.html" style="color:var(--accent);text-decoration:none">Forecaster</a></p>
+    <p class="eyebrow">Hull Tactical &middot; Research</p>
     <h1>Sizing a position with a volatility forecast</h1>
     <p class="pagenote">One signal, sized two ways at the same average risk. Real S&amp;P 500 futures,
       2010&ndash;2026.</p>
+    <p class="nav"><a href="index.html">&larr; Overview</a> &nbsp;&middot;&nbsp;
+      <a href="term_structure.html">VIX term structure</a> &nbsp;&middot;&nbsp;
+      <a href="forecaster.html">Volatility forecaster</a></p>
   </div>
 
   <div class="board">
