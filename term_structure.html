@@ -74,6 +74,9 @@
   .tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:4px;
     padding:6px 8px;font-size:12px;color:var(--ink);box-shadow:var(--shadow);display:none;line-height:1.5;white-space:nowrap}
 
+  .purpose{font-size:13.5px;color:var(--ink-2);background:#f2f8fb;border-left:3px solid var(--accent);
+    border-radius:0 3px 3px 0;padding:11px 15px;margin:0 0 22px;max-width:76ch;line-height:1.55}
+  .purpose b{color:var(--ink);font-weight:650}
   .cap{font-size:13px;color:var(--ink-3);margin:18px 2px 0;max-width:78ch}
   .foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
   .foot a{color:var(--accent);text-decoration:none;font-weight:600}
@@ -83,14 +86,16 @@
 <div class="wrap">
   <p class="eyebrow">Hull Tactical &middot; Research</p>
   <h1>The VIX term structure trade</h1>
-  <p class="sub">Short the front of the VIX curve and hold a later point against it, to earn the
-    volatility premium while dropping most of the crash. Drag the hedge to see the crash come out, then
-    turn on "size to a risk target" to run it as a real book and mix it with a buy-and-hold S&P.
-    Real data, out-of-sample: VX futures (2018 to 2026) or the liquid VXX / VIXM / VXZ ETFs
-    (2023 to 2026).</p>
+  <p class="sub">Short the front of the VIX curve and hold a later month against it. That earns the
+    volatility premium with far less of the crash than an outright short. Drag the hedge to see the
+    crash come out, then turn on "size to a risk target" to run it as a book.</p>
   <p class="nav"><a href="summary.html">&larr; Overview</a> &nbsp;&middot;&nbsp;
     <a href="sizing.html">Position sizing</a> &nbsp;&middot;&nbsp;
     <a href="forecaster.html">Volatility forecaster</a></p>
+
+  <p class="purpose"><b>What this is:</b> a candidate crash-hedged way to be short volatility, and a new
+    volatility signal (the curve's slope and premium) that a price-direction model does not capture. A
+    research prototype on real out-of-sample data, not a live strategy.</p>
 
   <div class="panel">
     <div class="segrow">
@@ -147,13 +152,9 @@
     <canvas id="under"></canvas>
   </div>
 
-  <p class="cap">Growth of $1, log scale. By default this shows the raw trade and its crash. Turn on
-    "size to a risk target" to scale the book to a chosen volatility (how you would really run it), add
-    a yearly cost, and mix it into a buy-and-hold S&amp;P book to see the effect on a long-equity
-    portfolio. Vol-targeting gives up a little Sharpe here (it levers up after calm and gets caught), so
-    the sized numbers are lower than the raw ones and closer to what you could actually run. The bottom
-    panel is the drawdown, with the big vol spikes marked. The ETF window (2023 to 2026) is short and
-    calm, so treat those figures as optimistic.</p>
+  <p class="cap">Growth of $1, log scale, out-of-sample. The default view is the raw trade; "size to a
+    risk target" runs it as a sized book, net of a yearly cost, and lets you mix it into a buy-and-hold
+    S&amp;P. The ETF window (2023 to 2026) is short and calm, so treat those figures as optimistic.</p>
 
   <p class="foot">Method and full results:
     <a href="https://github.com/CoreyZhang76/vix-term-structure/blob/master/docs/TERM_STRUCTURE.md">docs/TERM_STRUCTURE.md</a>
@@ -251,10 +252,10 @@ var TS={"fut":{"dates":[20181106,20181107,20181108,20181109,20181111,20181112,20
     function X(i){return pL+(W-pL-pR)*i/(N-1);}
     function Y(v){return pT+(H-pT-pB)*(1-(Math.log10(Math.max(v,1e-3))-lo)/(hi-lo));}
     g.font='11px '+getComputedStyle(document.body).fontFamily; g.textAlign='center'; g.textBaseline='alphabetic';
-    var prev=null;
+    var prev=null,lastLbl=-999,skipY=(Math.floor(dates[0]/100)%100>6)?Math.floor(dates[0]/10000):-1;
     for(i=0;i<N;i++){ var yr=Math.floor(dates[i]/10000); if(yr!==prev){ prev=yr; var xx=X(i);
       g.strokeStyle='#eef2f4'; g.lineWidth=1; g.beginPath(); g.moveTo(xx,pT); g.lineTo(xx,H-pB); g.stroke();
-      g.fillStyle='#8a9096'; g.fillText(yr,xx,H-6);} }
+      if(yr!==skipY && xx-lastLbl>=40){ g.fillStyle='#8a9096'; g.fillText(yr,xx,H-6); lastLbl=xx; }} }
     g.textAlign='right'; g.textBaseline='middle';
     for(var pw=Math.ceil(lo);pw<=Math.floor(hi);pw++){ var val=Math.pow(10,pw), y=Y(val);
       g.strokeStyle='#eef2f4'; g.beginPath(); g.moveTo(pL,y); g.lineTo(W-pR,y); g.stroke();
