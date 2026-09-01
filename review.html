@@ -220,6 +220,35 @@
       that way, Sharpe improves to 1.11 but crash beta moves from &minus;0.30 to +0.50 and the
       drawdown roughly doubles, because the hedge is smallest going into states where a further
       decline can still occur. A floor under the hedge would avoid this.</p>
+    <p>Setting the ratio from the curve's slope was tested and does not work. The reasoning is
+      sound: a steep curve should mean a shock hits the front hard and the middle barely, implying
+      a larger ratio. Empirically the two are unrelated. The rolling shock-beta ratio correlates
+      &minus;0.07 with the current slope between the 30-day and 150-day points, and sorting by slope
+      quartile gives ratios of 2.73, 3.01, 2.71 and 2.46, which is not monotone.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>rule for setting the ratio</th><th>Sharpe</th><th>worst day</th>
+          <th>max drawdown</th><th>crash beta</th><th>mean k</th></tr></thead>
+        <tbody>
+          <tr><td class="k">fixed at 2.7</td><td>+0.57</td><td>&minus;9.1%</td><td>&minus;19%</td><td>&minus;0.29</td><td>2.70</td></tr>
+          <tr><td class="k">rolling shock beta</td><td class="good">+0.96</td><td class="good">&minus;8.6%</td><td class="good">&minus;12%</td><td>&minus;0.30</td><td>2.73</td></tr>
+          <tr><td class="k">fitted on 30d/150d slope, %</td><td>+0.81</td><td>&minus;10.4%</td><td>&minus;24%</td><td>&minus;0.80</td><td>3.07</td></tr>
+          <tr><td class="k">fitted on 30d/150d slope, points</td><td>+0.82</td><td>&minus;9.7%</td><td>&minus;23%</td><td>&minus;0.65</td><td>3.07</td></tr>
+          <tr><td class="k">fitted on front/second slope</td><td>+0.75</td><td>&minus;10.9%</td><td>&minus;24%</td><td>&minus;0.87</td><td>3.07</td></tr>
+          <tr><td class="k">tilt up when the curve is steep</td><td>+0.67</td><td>&minus;10.0%</td><td class="bad">&minus;35%</td><td>+0.74</td><td>2.92</td></tr>
+          <tr><td class="k">tilt up when the curve is flat</td><td>+0.60</td><td>&minus;11.0%</td><td>&minus;17%</td><td>&minus;0.87</td><td>2.48</td></tr>
+        </tbody>
+      </table>
+      <p class="cap">Coefficients fitted on an expanding window, so no rule uses future data.</p>
+    </div>
+    <p>Every slope rule is worse than the shock beta and roughly doubles the drawdown. The fitted
+      versions do reach a more negative crash beta, but only because they happen to carry a larger
+      average hedge, not because the slope is informative. The likely reason is that slope measures
+      how much the curve pays, while the ratio needs to know how differently the two legs respond to
+      a shock. Those are related in principle and decoupled in this data.</p>
+    <p>This is the third independent test in which the slope of the VIX curve fails to carry
+      information: it does not time the spread, it adds nothing to a volatility forecast once the
+      level is included, and it does not set the hedge ratio.</p>
     <p>VXX is used as the short leg rather than UVXY. UVXY holds the same part of the curve with
       1.5&times; leverage rebalanced daily, so a short position earns rebalancing decay as well as
       the term-structure premium. That is useful in a funded book but confounds a measurement of the
@@ -254,6 +283,33 @@
       3,300 independent minutes and was compared against zero rather than a benchmark. ES activity
       tracks contemporaneous VIX activity, which already predicts the next move because volatility
       clusters.</p>
+  </section>
+
+  <section>
+    <h2>Design choices</h2>
+    <p>Each decision in the construction, the alternatives considered, and why the choice was made.
+      Where a choice was not tested against alternatives, it says so.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>choice</th><th>made</th><th>reason</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Price source</td><td>Cboe per-contract settlements</td><td>Settlement is the price positions are marked at and the price a roll transacts against. Free, so results are checkable, and it reaches back to 2013 with open interest attached.</td></tr>
+          <tr><td class="k">Roll method</td><td>Hold named expiries</td><td>Differencing a front-month series books the gap between two different contracts as profit and loss, which manufactures most of the apparent carry.</td></tr>
+          <tr><td class="k">Roll timing</td><td>3 trading days before expiry</td><td>The contract stops behaving in its last two days: at one day out it sits 0.26 vol points from spot. Not tuned, and the result is sensitive to it (see limitations).</td></tr>
+          <tr><td class="k">Return definition</td><td>P&amp;L over both legs' notional</td><td>Normalising by one leg would let the hedge ratio move the denominator, so the reported figures would change with the hedge rather than because of it.</td></tr>
+          <tr><td class="k">Drawdown</td><td>Constant notional</td><td>A compounded drawdown is undefined once a day loses more than the whole notional, which happens on 5 Feb 2018.</td></tr>
+          <tr><td class="k">Which legs</td><td>Front against second</td><td>Tested against the third through sixth months. All are within noise on risk-adjusted return; the front/second pair carries the least crash exposure.</td></tr>
+          <tr><td class="k">Hedge ratio</td><td>Rolling shock beta</td><td>Tested against fixed ratios and against slope-based rules. Best on drawdown and worst day; no rule separates on Sharpe.</td></tr>
+          <tr><td class="k">Ratio estimator</td><td>Quotient of two VIX betas</td><td>Matches the desk convention. A direct regression of one leg on the other is far steadier and needs no cap, but gives a smaller hedge. Both are reported; the choice is open.</td></tr>
+          <tr><td class="k">Cap on the ratio</td><td>0.5 to 8</td><td>The quotient divides by a small number and reaches 32 uncapped, which would put thirty times the hedge on the book.</td></tr>
+          <tr><td class="k">Estimation window</td><td>252 days</td><td>Tested at 63, 126, 252 and 504 days. All give the same mean ratio and the same risk outcome, so the choice does not matter.</td></tr>
+          <tr><td class="k">Recalculation cadence</td><td>Monthly, on the roll date</td><td>Weekly, monthly and quarterly are indistinguishable, and turnover costs are negligible either way. Monthly on the roll date means the size change needs no separate trade. An operational preference, not a result. Recalculating at all does matter: a fixed ratio gives 0.59 against about 1.0.</td></tr>
+          <tr><td class="k">Shock definition</td><td>Daily log change in spot VIX</td><td>Weekly, fortnightly and monthly sampling give the same ratio. Measuring against futures rather than spot raises both betas by about a third and leaves the ratio close to unchanged.</td></tr>
+          <tr><td class="k">Short leg instrument</td><td>VXX, not UVXY</td><td>UVXY adds 1.5x daily-rebalanced leverage, so shorting it earns rebalancing decay on top of the term-structure premium, which confounds a measurement of the curve.</td></tr>
+          <tr><td class="k">Forecast benchmark</td><td>HAR at 5, 21, 63 days</td><td>The standard volatility forecast. Beating a naive baseline would be uninformative.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section>
