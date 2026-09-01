@@ -96,6 +96,18 @@
       "front month" price series instead would treat the roll-day gap between two different
       contracts as profit and loss, which materially distorts the apparent carry. Returns are
       profit and loss over the gross notional of both legs.</p>
+    <p>The roll happens three trading days before expiry, without exception across all 160
+      contracts held as the front leg. Expiry falls on a Wednesday, so the position normally exits
+      at the Friday close and takes on the next contract on Monday: a single-day switch with no gap
+      and no overlap. The buffer exists because the final days are barely tradeable. At one trading
+      day to expiry the front sits an average of 0.26 vol points from spot, so almost no premium
+      remains, and final settlement is a single SPX-options print.</p>
+    <p>The chain holds 169 expiries, exactly one per calendar month, so no weekly contracts
+      contaminate the front and second selection. Seven do not fall on the standard Wednesday: five
+      because the reference third Friday of the following month was Good Friday, one because the
+      settlement Wednesday itself was Juneteenth in June 2024, and one where both were closed. On
+      those months the exit is a Thursday, still three trading days out, since the count is in
+      trading days rather than calendar days.</p>
     <p>Three checks against independent data: the variance-space 30-day blend correlates 0.947
       with the Cboe VIX index and sits above it on 83% of days; the front converges to spot at
       expiry with a mean error of 0.098 vol points across 160 expiries; and a synthetic VXX built
@@ -174,6 +186,12 @@
       shocks, holding the ratio of the two legs' shock betas. Regressed on daily log changes in VIX,
       VXX has a beta of 0.504 and VXZ 0.171. The rolling ratio is not stable: it averages 3.93 over
       2018 to 2020, 2.38 over 2021 to 2023 and 2.59 over 2024 to 2026.</p>
+    <p>The ratio is not sensitive to how often the data is sampled. Measured on weekly rather
+      than daily returns it is 3.01 against 2.94 for VXX over VXZ, and 4.64 against 4.62 for UVXY
+      over VXZ. Fortnightly and monthly sampling stay in the same range. Individual betas come out
+      marginally higher weekly, VXX at 0.54 against 0.50, which is consistent with the ETPs closing
+      at 4:00pm while VIX is calculated to 4:15pm, but the effect is around 7% and does not move the
+      ratio.</p>
     <div class="tw">
       <table>
         <thead><tr><th>sizing of the long leg</th><th>Sharpe</th><th>worst day</th>
@@ -265,6 +283,11 @@
       <li>Shock betas are measured against spot VIX. Measuring against futures, or in points rather
         than log changes, rescales both betas and moves the ratio, so the definition should be
         reconciled before ratios are compared across sources.</li>
+      <li>The three-day roll buffer was chosen because the contract stops behaving in its final
+        days, not by optimisation, but the result is sensitive to it. Holding to the last trading
+        day gives a Sharpe of 0.23; exiting eleven trading days out gives 0.70. That spread sits
+        inside the error bar and is treated as noise, but three days should not be read as
+        optimal.</li>
       <li>The intraday result rests on 22 days of one contract.</li>
       <li>The VIX level clears a HAR baseline as a forecasting input. The test it has not faced is
         incremental value over the existing production feature set.</li>
