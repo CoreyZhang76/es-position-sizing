@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIX term structure: what I tested and what held up — Hull Tactical</title>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
+    --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;--warn:#b1543e;--good:#1c7a63;
+    --shadow:0 1px 2px #0126430f,0 5px 14px #0126430a;
+    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    --mono:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased}
+  h1,h2{color:var(--ink)}
+  .wrap{max-width:820px;margin:0 auto;padding:30px 22px 60px}
+
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);margin:0 0 10px}
+  h1{font-size:clamp(22px,3.2vw,28px);line-height:1.15;margin:0 0 8px;font-weight:650;
+    letter-spacing:-.01em}
+  .sub{font-size:15px;color:var(--ink-2);margin:0 0 14px;max-width:64ch}
+  .nav{font-size:14px;margin:0}
+  .nav a{color:var(--accent);text-decoration:none;font-weight:600}
+  .nav a:hover{text-decoration:underline}
+
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 6px}
+  @media(max-width:620px){.tiles{grid-template-columns:1fr}}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:2px;
+    box-shadow:var(--shadow);padding:18px 16px}
+  .tile .n{font-family:var(--mono);font-size:26px;font-weight:650;color:var(--ink);
+    letter-spacing:-.01em;line-height:1}
+  .tile .l{font-size:12.5px;color:var(--ink-2);margin-top:10px}
+
+  section{margin-top:28px}
+  h2{font-size:15px;margin:0 0 10px;font-weight:640;padding-bottom:7px;
+    border-bottom:1px solid var(--line)}
+  ul{margin:0;padding-left:20px}
+  li{margin:7px 0;font-size:14.5px;color:var(--ink-2)}
+  li b{color:var(--ink);font-weight:600}
+  p.note{font-size:14.5px;margin:10px 0 0}
+
+  .callout{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:2px;padding:14px 16px;margin:14px 0 0;font-size:14.5px}
+  .callout.flag{border-left-color:var(--warn)}
+  .callout .t{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--ink-3);display:block;margin-bottom:6px}
+  .callout b{color:var(--ink)}
+
+  .tw{overflow-x:auto;margin-top:14px}
+  table{border-collapse:collapse;width:100%;min-width:460px;font-size:13.5px}
+  th,td{padding:7px 10px;text-align:right;font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left;padding-left:0}
+  th:last-child,td:last-child{padding-right:0}
+  thead th{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:600;border-bottom:1px solid var(--line);vertical-align:bottom}
+  tbody td{border-bottom:1px solid var(--line)}
+  tbody tr:last-child td{border-bottom:none}
+  td.k{color:var(--ink);font-weight:600;text-align:left}
+  .bad{color:var(--warn);font-weight:600}
+  .good{color:var(--good);font-weight:600}
+
+  .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;
+    color:var(--ink-3)}
+  .foot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .foot a:hover{text-decoration:underline}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Hull Tactical &middot; Research review</p>
+  <h1>The VIX term structure: what I tested and what held up</h1>
+  <p class="sub">Rebuilt on Cboe per-contract settlements, 2013 to 2026, 3,341 trading days. Every
+    figure is out of sample and reproduces from a clean clone with no vendor key.</p>
+  <p class="nav">Tools: <a href="term_structure.html">VIX term structure</a> &middot;
+    <a href="sizing.html">Position sizing</a> &middot;
+    <a href="forecaster.html">Volatility forecaster</a> &middot;
+    <a href="index.html">Overview</a></p>
+
+  <div class="tiles">
+    <div class="tile"><div class="n">&#8539;&times;</div>
+      <div class="l">The crash exposure of a naked short, via the calendar spread</div></div>
+    <div class="tile"><div class="n">+0.01</div>
+      <div class="l">Sharpe edge over that naked short, p&nbsp;=&nbsp;0.94. There is none</div></div>
+    <div class="tile"><div class="n">+0.65</div>
+      <div class="l">Correlation with the S&amp;P. This is not a hedge at 1:1</div></div>
+  </div>
+
+  <section>
+    <h2>Two things up front</h2>
+    <ul>
+      <li><b>This is not HFT.</b> The term structure work is daily frequency. The HFT-lane work is
+        the ES order-flow forecaster and the execution-timing result, which is separate. The bridge
+        between the two scales was the original thesis and I tested it directly: it is null.</li>
+      <li><b>The trade is not new.</b> A front/next calendar spread is standard. What might be
+        useful is that it is now tested on thirteen years with an error bar on every number, and
+        that the desk's own sizing rule is tested alongside it.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What I tested</h2>
+    <ul>
+      <li>Does the calendar spread beat an outright short, rolled by named expiry so a roll day is
+        a real trade and not the price gap between two different contracts.</li>
+      <li>Did the edge decay after 2023, which the previous read said needed explaining before
+        anyone allocated.</li>
+      <li>Is there a better configuration: which far leg, what hedge ratio, whether to gate on vol,
+        and separately the shock-beta sizing the desk uses.</li>
+      <li>Is any of it a feature rather than a trade, and does the order book help at all.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What worked</h2>
+    <ul>
+      <li><b>The crash reduction, and it is larger than previously reported.</b> On the S&amp;P's
+        worst 5% of days the naked short loses 3.68x what the S&amp;P loses; the spread loses 0.48x.
+        That is an eighth, not the quarter reported before. On 5 Feb 2018 the front VIX future went
+        15.6 to 33.2 in a day, so an unlevered one-lot short lost more than its whole notional. The
+        spread lost 20% over that window, and 17% against 84% in March 2020.</li>
+      <li><b>The VIX level as a forecasting feature.</b> Walk-forward against a HAR baseline on
+        forward realized vol, the front price adds 0.05 to 0.08 out-of-sample R2, largest and only
+        significant at 21 days, which is what a 30-day forward measure should do. Low turnover, so
+        no cost hurdle.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What did not</h2>
+    <ul>
+      <li><b>No Sharpe edge over the naked short.</b> 0.51 &plusmn;0.58 against 0.50 &plusmn;0.57,
+        paired bootstrap on the difference +0.01, p&nbsp;=&nbsp;0.94. The previously reported 0.73
+        against 0.48 was a point estimate on eight years with no error bar, and the gap sat inside
+        that error.</li>
+      <li><b>The post-2023 decay was a sample-window artefact.</b> The losing years are 2013, 2014,
+        2015, 2018 and 2024. Three of them are the earliest in the data, long before the trade could
+        have been crowded. Neither a time trend nor a 2024 break is significant on its own, and
+        per-contract open interest shows no crowding.</li>
+      <li><b>Of the fixed configurations tested, none beat the plain version</b> on risk-adjusted
+        return. They only set how much crash exposure you carry, from +1.70 downside beta to about
+        zero.</li>
+      <li><b>The curve's shape adds nothing as a feature</b> once its level is in the model. Slope
+        and curvature add +0.02, +0.01 and &minus;0.01 R2, none significant. Slope looks strong in
+        sample at t&nbsp;=&nbsp;&minus;4.7, but it correlates &minus;0.54 with the level and is
+        largely reading the level back.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Correlation with the market</h2>
+    <p class="note">Short vol is long equity risk: you collect while markets are calm and pay when
+      they fall. So the 1:1 spread is positively correlated with the S&amp;P, not negatively. It
+      only becomes a hedge once the long leg is big enough to flip the sign.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>book</th><th>corr</th><th>beta</th><th>crash beta</th>
+          <th>corr, up days</th><th>corr, down days</th><th>avg on worst 5%</th></tr></thead>
+        <tbody>
+          <tr><td class="k">naked short front</td><td>+0.73</td><td>+3.82</td><td class="bad">+3.68</td><td>+0.47</td><td>+0.68</td><td class="bad">&minus;12.52%</td></tr>
+          <tr><td class="k">calendar spread 1:1</td><td>+0.65</td><td>+0.56</td><td>+0.48</td><td>+0.35</td><td>+0.63</td><td>&minus;1.88%</td></tr>
+          <tr><td class="k">spread, ratio 1.4</td><td>+0.03</td><td>+0.01</td><td>&minus;0.10</td><td>&minus;0.03</td><td>+0.04</td><td>&minus;0.11%</td></tr>
+          <tr><td class="k">short VXX / +2.15 VXZ</td><td>+0.12</td><td>+0.09</td><td>&minus;0.10</td><td>&minus;0.06</td><td>+0.12</td><td>&minus;0.45%</td></tr>
+          <tr><td class="k">short VXX / +3.4 VXZ</td><td class="good">&minus;0.31</td><td>&minus;0.27</td><td class="good">&minus;0.48</td><td>&minus;0.23</td><td>&minus;0.31</td><td class="good">+0.90%</td></tr>
+          <tr><td class="k">long VXX, for reference</td><td>&minus;0.75</td><td>&minus;2.87</td><td>&minus;2.76</td><td>&minus;0.47</td><td>&minus;0.73</td><td>+10.65%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout flag">
+      <span class="t">The part a single correlation hides</span>
+      Correlation is asymmetric, and for short vol it is always asymmetric the wrong way. The 1:1
+      spread is <b>+0.35 with up days and +0.63 with down days</b>: it participates less in rallies
+      than in selloffs, which is the opposite of what a diversifier should do. The over-hedged
+      version has the asymmetry working for it instead.
+    </div>
+  </section>
+
+  <section>
+    <h2>The desk's sizing rule, tested</h2>
+    <p class="note">Sizing the mid leg by its VIX-shock beta rather than by contract count is a
+      different rule from the fixed-ratio sweep, so I ran it separately. Short VXX against
+      k&nbsp;&times;&nbsp;VXZ, 2018 to 2026, k lagged one day.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>sizing</th><th>Sharpe</th><th>worst day</th><th>max drawdown</th>
+          <th>crash beta</th></tr></thead>
+        <tbody>
+          <tr><td class="k">k = 1</td><td>+0.57</td><td>&minus;16.8%</td><td>&minus;48%</td><td class="bad">+0.67</td></tr>
+          <tr><td class="k">k = 2.15, current desk</td><td>+0.64</td><td>&minus;10.6%</td><td>&minus;25%</td><td>&minus;0.10</td></tr>
+          <tr><td class="k">k = 3.4, original desk</td><td>+0.45</td><td>&minus;10.0%</td><td>&minus;30%</td><td>&minus;0.48</td></tr>
+          <tr><td class="k">k = rolling shock beta</td><td class="good">+0.95</td><td class="good">&minus;8.6%</td><td class="good">&minus;12%</td><td class="good">&minus;0.30</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><b>The ratio reconciles.</b> On VXX against VXZ the rolling shock-beta ratio runs 2.4 to
+        2.6 over recent years against the desk's 2.15, and 3.9 in 2018 to 2020 against the original
+        3.4. On UVXY it comes out near 3.9 today, so the instrument moves it more than the method.</li>
+      <li><b>Shocks really are larger when VIX is low</b>, measured forward. From the lowest VIX
+        quartile the largest up-move over the next month averages 29.7% and the 99th percentile is
+        129%; from the highest quartile it is 13.8% and 80%. In VIX points it is flat at about 5, so
+        the whole effect is the low base, which is what a dollar-sized position is exposed to.</li>
+      <li><b>Sharpe does not separate.</b> Paired bootstrap against k&nbsp;=&nbsp;1 gives p of 0.79,
+        0.79 and 0.80. The case for re-estimating the ratio is risk control, not return.</li>
+    </ul>
+    <div class="callout">
+      <span class="t">A question back</span>
+      My regime tilt scales symmetrically, so hedging up when VIX is low also hedges down when VIX is
+      high. That improved Sharpe to 1.11 but moved crash beta from &minus;0.30 to +0.50 and doubled
+      the drawdown, because it takes the hedge off going into high-vol states where a second leg
+      down can still come. <b>Does the live version floor the hedge rather than scaling it both
+      ways?</b>
+    </div>
+    <div class="callout">
+      <span class="t">Why VXX and not UVXY here</span>
+      UVXY is the same curve exposure under 1.5x daily-rebalanced leverage, so shorting it collects
+      path-dependent rebalancing decay on top of the term-structure premium. That is capital
+      efficiency in a live book and a confound when the thing being measured is the curve. It also
+      breaks comparability with the 1x futures work. VXX has its own wrinkle: it already contains
+      the front-to-second roll, which is why it maps cleanly onto the curve, but it is an ETN, so it
+      carries issuer credit risk and can decouple from NAV when creations are capped.
+    </div>
+  </section>
+
+  <section>
+    <h2>The link to the order book, tested and null</h2>
+    <ul>
+      <li><b>Direction:</b> out-of-sample sign hits of 52.6%, 47.5% and 47.3% at one, two and five
+        minutes. That straddles a coin flip.</li>
+      <li><b>Magnitude:</b> against a benchmark of the VIX's own recent volatility, which alone
+        explains 11 to 17% out of sample, ES activity adds &minus;0.006, +0.001 and +0.005 R2. The
+        bar was +0.005 at two or more horizons, fixed before running. Met at zero of three.</li>
+      <li><b>A number I withdrew.</b> A first pass showed ES quote activity at +0.13 against the size
+        of the next minute's VIX move. It was inflated two ways: 46.5M order-book rows aligned onto a
+        VIX series holding about 3,300 independent minutes, and measured against zero rather than a
+        benchmark. ES activity simply tracks current VIX activity, which already predicts the next
+        move because volatility clusters.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Process</h2>
+    <ul>
+      <li><b>Every Sharpe ships with a standard error.</b> Newey-West plus a block bootstrap, and
+        strategy comparisons are a paired bootstrap on the difference so shared exposure cancels.</li>
+      <li><b>Bars are written down before the test runs.</b> The order-book threshold was +0.005 R2
+        at two or more horizons, fixed in the file before the first run.</li>
+      <li><b>Nested models, so each increment is attributable</b>, compared with Diebold-Mariano at
+        h&minus;1 lags because overlapping forecasts have autocorrelated errors by construction.</li>
+      <li><b>Three bugs this caught in my own work.</b> A positivity filter that dropped 87% of the
+        sample because curvature is normally negative, caught when n came back 414 out of 3,341. A
+        return definition that made position sizing invisible, caught when a half-size variant
+        reported a difference of exactly 0.00. And a drawdown that could not be computed, because a
+        day losing more than 100% sends a compounded equity curve negative.</li>
+      <li><b>A test I nearly got backwards.</b> My first cut at "are shocks larger when VIX is low"
+        said no. It measured same-day shocks bucketed on the previous day's VIX, which picks up
+        volatility clustering read backwards: VIX is high today because a shock just landed. Measured
+        forward, which is what a hedge is sized against, the premise holds.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Where I would take it</h2>
+    <ul>
+      <li>Put the VIX level in front of the production model. It clears a HAR baseline; the bar it
+        has not faced is incremental value over the existing feature set.</li>
+      <li>Reconcile the shock definition. These betas are against spot VIX, and futures rather than
+        spot, or points rather than log, rescales the ratio.</li>
+      <li>What would change my mind on the trade: a vol spike held live rather than backtested
+        through, and a second month of order-book data for the intraday null, which rests on 22 days.</li>
+    </ul>
+    <div class="callout">
+      <span class="t">The honest summary</span>
+      A way to hold short volatility with most of the crash removed, not a source of return, and not
+      a hedge unless it is over-hedged. I would not put it forward as alpha.
+    </div>
+  </section>
+
+  <p class="foot">
+    Reproduce any figure from a clean clone, no vendor account:
+    <a href="https://github.com/CoreyZhang76/vix-term-structure">code &amp; findings</a>.
+    Tools: <a href="term_structure.html">VIX term structure</a> &middot;
+    <a href="sizing.html">position sizing</a> &middot;
+    <a href="forecaster.html">volatility forecaster</a>.
+  </p>
+</div>
+
+</body>
+</html>
