@@ -220,9 +220,14 @@
       that way, Sharpe improves to 1.11 but crash beta moves from &minus;0.30 to +0.50 and the
       drawdown roughly doubles, because the hedge is smallest going into states where a further
       decline can still occur. A floor under the hedge would avoid this.</p>
-    <p>Setting the ratio from the curve's slope was tested and does not work. The reasoning is
-      sound: a steep curve should mean a shock hits the front hard and the middle barely, implying
-      a larger ratio. Empirically the two are unrelated. The rolling shock-beta ratio correlates
+    <p>Short front against long middle is a position in the slope: at a one-for-one ratio the
+      profit and loss correlates 0.940 with the change in the front-to-second slope on non-roll
+      days, so the trade earns the slope's rate of change. That makes the slope the axis the trade
+      sits on rather than an input to sizing it, and the slope level does not predict its own change
+      (t = &minus;1.37), which is consistent with slope having failed as a timing signal.</p>
+    <p>Setting the ratio from the slope was tested anyway and does not work. The reasoning is sound:
+      a steep curve should mean a shock hits the front hard and the middle barely, implying a larger
+      ratio. Empirically the two are unrelated. The rolling shock-beta ratio correlates
       &minus;0.07 with the current slope between the 30-day and 150-day points, and sorting by slope
       quartile gives ratios of 2.73, 3.01, 2.71 and 2.46, which is not monotone.</p>
     <div class="tw">
@@ -249,6 +254,39 @@
     <p>This is the third independent test in which the slope of the VIX curve fails to carry
       information: it does not time the spread, it adds nothing to a volatility forecast once the
       level is included, and it does not set the hedge ratio.</p>
+    <p>When the ratio is recalculated matters more than which formula produces it. Drift below is
+      the average gap between the ratio being carried and the current target, so it measures how
+      stale the hedge is allowed to become.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>recalculated</th><th>updates/yr</th><th>turnover</th><th>drift</th>
+          <th>Sharpe</th><th>worst day</th><th>max drawdown</th></tr></thead>
+        <tbody>
+          <tr><td class="k">every day</td><td>250</td><td class="bad">2.85</td><td>0.011</td><td>+0.95</td><td>&minus;8.6%</td><td>&minus;12.3%</td></tr>
+          <tr><td class="k">weekly, Friday</td><td>50</td><td>2.06</td><td>0.029</td><td>+0.99</td><td>&minus;8.6%</td><td>&minus;11.2%</td></tr>
+          <tr><td class="k">monthly, first day</td><td>12</td><td>1.70</td><td>0.082</td><td>+0.99</td><td>&minus;9.0%</td><td>&minus;11.9%</td></tr>
+          <tr><td class="k">on the roll date</td><td class="good">12</td><td class="good">1.46</td><td>0.068</td><td class="good">+1.01</td><td>&minus;8.7%</td><td class="good">&minus;11.4%</td></tr>
+          <tr><td class="k">band: drift &gt; 0.1</td><td>11</td><td>1.89</td><td>0.046</td><td>+0.95</td><td>&minus;8.7%</td><td>&minus;12.1%</td></tr>
+          <tr><td class="k">band: drift &gt; 0.25</td><td>5</td><td>1.69</td><td>0.097</td><td>+0.91</td><td>&minus;8.9%</td><td>&minus;12.4%</td></tr>
+          <tr><td class="k">band: drift &gt; 0.5</td><td>3</td><td>1.39</td><td>0.242</td><td>+0.91</td><td>&minus;9.1%</td><td>&minus;16.8%</td></tr>
+          <tr><td class="k">band: drift &gt; 1.0</td><td>1</td><td>1.26</td><td class="bad">0.424</td><td class="bad">+0.80</td><td>&minus;9.3%</td><td>&minus;16.2%</td></tr>
+        </tbody>
+      </table>
+      <p class="cap">Turnover is units of the long leg traded per year. Ratio target is the rolling
+        shock beta throughout, so only the update timing changes.</p>
+    </div>
+    <p>Recalculating on the roll date is best, and it wins on every column at once: the fewest
+      updates, the lowest turnover, the highest Sharpe and the smallest drawdown. It also has the
+      operational argument, since both legs are already being traded that day, so the change in size
+      requires no separate trade, and it matches the monthly cycle the ratio itself moves on.</p>
+    <p>Updating daily is the worst of the frequent options and costs twice the turnover of the roll
+      date for a lower Sharpe, which indicates it is tracking estimation noise rather than a moving
+      target. Drift bands, which tie the update to whether it matters rather than to the calendar,
+      do not help: they reduce updates but allow the hedge to go stale, and performance falls
+      steadily as the band widens.</p>
+    <p>Holding the ratio fixed is the one clearly bad choice. A constant 2.5 gives a Sharpe of 0.59
+      against roughly 1.0 for any updating rule, so the decision that matters is whether to
+      recalculate at all rather than how often.</p>
     <p>VXX is used as the short leg rather than UVXY. UVXY holds the same part of the curve with
       1.5&times; leverage rebalanced daily, so a short position earns rebalancing decay as well as
       the term-structure premium. That is useful in a funded book but confounds a measurement of the
@@ -303,7 +341,7 @@
           <tr><td class="k">Ratio estimator</td><td>Quotient of two VIX betas</td><td>Matches the desk convention. A direct regression of one leg on the other is far steadier and needs no cap, but gives a smaller hedge. Both are reported; the choice is open.</td></tr>
           <tr><td class="k">Cap on the ratio</td><td>0.5 to 8</td><td>The quotient divides by a small number and reaches 32 uncapped, which would put thirty times the hedge on the book.</td></tr>
           <tr><td class="k">Estimation window</td><td>252 days</td><td>Tested at 63, 126, 252 and 504 days. All give the same mean ratio and the same risk outcome, so the choice does not matter.</td></tr>
-          <tr><td class="k">Recalculation cadence</td><td>Monthly, on the roll date</td><td>Weekly, monthly and quarterly are indistinguishable, and turnover costs are negligible either way. Monthly on the roll date means the size change needs no separate trade. An operational preference, not a result. Recalculating at all does matter: a fixed ratio gives 0.59 against about 1.0.</td></tr>
+          <tr><td class="k">Recalculation cadence</td><td>On the roll date</td><td>Tested against daily, weekly, monthly and four drift bands. The roll date wins on updates, turnover, Sharpe and drawdown simultaneously, and needs no separate trade since both legs are already moving. Daily is the worst of the frequent options. Recalculating at all matters most: a fixed ratio gives 0.59 against about 1.0.</td></tr>
           <tr><td class="k">Shock definition</td><td>Daily log change in spot VIX</td><td>Weekly, fortnightly and monthly sampling give the same ratio. Measuring against futures rather than spot raises both betas by about a third and leaves the ratio close to unchanged.</td></tr>
           <tr><td class="k">Short leg instrument</td><td>VXX, not UVXY</td><td>UVXY adds 1.5x daily-rebalanced leverage, so shorting it earns rebalancing decay on top of the term-structure premium, which confounds a measurement of the curve.</td></tr>
           <tr><td class="k">Forecast benchmark</td><td>HAR at 5, 21, 63 days</td><td>The standard volatility forecast. Beating a naive baseline would be uninformative.</td></tr>
