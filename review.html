@@ -77,7 +77,8 @@
         On 5 February 2018 the front future rose from 15.6 to 33.2 in one day, more than the whole
         notional behind an unlevered position.</li>
       <li>The calendar spread collects a similar premium with roughly an eighth of that crash
-        exposure. It does not produce a higher return per unit of risk.</li>
+        exposure, though that ratio is estimated on 167 crash days and carries a wide interval. It
+        does not produce a higher return per unit of risk.</li>
       <li>The weakness after 2023, previously read as decay, is a property of the sample window.
         Losing years occur throughout the history.</li>
       <li>At a one-for-one hedge the spread is positively correlated with equities. It becomes a
@@ -126,6 +127,7 @@
           <tr><td class="k">Worst single day</td><td class="bad">&minus;112.6%</td><td>&minus;15.0%</td></tr>
           <tr><td class="k">Beta to the S&amp;P</td><td>+3.82</td><td>+0.56</td></tr>
           <tr><td class="k">Beta on the S&amp;P worst 5% of days</td><td class="bad">+3.68</td><td class="good">+0.48</td></tr>
+          <tr><td class="k">&nbsp;&nbsp;95% interval on that beta</td><td>[+2.44, +9.82]</td><td>[+0.29, +1.39]</td></tr>
           <tr><td class="k">February 2018 window</td><td class="bad">&minus;112%</td><td>&minus;20%</td></tr>
           <tr><td class="k">March 2020 window</td><td>&minus;84%</td><td>&minus;17%</td></tr>
         </tbody>
@@ -138,6 +140,17 @@
       error.</p>
     <p>The reduction in crash exposure is the durable result. Measured on the S&amp;P worst 5% of
       days, the spread carries 13% of the outright short's exposure.</p>
+    <p>That measure deserves its interval spelled out, because it is the one claim here worth
+      defending and it rests on a much smaller sample than the row above it. The worst 5% of days
+      is 167 observations out of 3,336, so a block bootstrap puts the outright short's crash beta
+      anywhere between +2.4 and +9.8. The difference between the two, &minus;3.19 with an interval
+      of &minus;9.25 to &minus;1.61, does exclude zero. A symmetric p-value on the same bootstrap
+      gives 0.089 and disagrees, which happens because the statistic is heavily skewed; the
+      percentile interval is the more reliable of the two here.</p>
+    <p>So the direction is established and the magnitude is not pinned down. The ratio of 13% is a
+      point estimate that could plausibly sit anywhere from roughly 3% to 50%. The claim to make is
+      that crash exposure is materially lower, on 167 crash days, with a wide band on how much
+      lower.</p>
   </section>
 
   <section>
