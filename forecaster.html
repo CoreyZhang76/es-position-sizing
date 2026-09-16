@@ -3,9 +3,79 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ES short-term volatility forecaster — Hull Tactical</title>
+<title>Busy-window volatility forecaster | Hull Tactical Research</title>
+<style>
+  :root{
+    --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
+    --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
+    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+  main{display:block;flex:1}
+
+  .sitebar{position:sticky;top:0;z-index:30;background:var(--surface);
+    border-bottom:1px solid var(--line);box-shadow:0 1px 2px #0126430a}
+  .sitebar-in{max-width:1000px;margin:0 auto;padding:0 22px;display:flex;align-items:center;
+    justify-content:space-between;gap:10px 26px;flex-wrap:wrap;min-height:58px}
+  .brand{display:flex;align-items:baseline;gap:9px;text-decoration:none;padding:11px 0 9px}
+  .brand-name{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.015em}
+  .brand-sub{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-3)}
+  .sitenav{display:flex;flex-wrap:wrap;gap:0 22px}
+  .sitenav a{font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+    color:var(--ink-3);text-decoration:none;padding:7px 0 6px;border-bottom:2px solid transparent;
+    white-space:nowrap}
+  .sitenav a:hover{color:var(--ink)}
+  .sitenav a.on{color:var(--ink);border-bottom-color:var(--accent)}
+
+  main>.wrap{padding-top:28px}
+
+  /* Standing facts a reader needs before they touch a control, and the one finding that
+     constrains how to read the page. Both are shell-owned so every page states them alike. */
+  .meta{display:flex;flex-wrap:wrap;margin:0 0 14px;font-size:12px;
+    letter-spacing:.02em;color:var(--ink-3)}
+  .meta span{display:inline-flex;align-items:center}
+  .meta span:not(:last-child)::after{content:"";width:3px;height:3px;border-radius:50%;
+    background:currentColor;opacity:.5;margin:0 11px}
+  .meta b{color:var(--ink-2);font-weight:650}
+  .finding{font-size:13.5px;line-height:1.6;color:var(--ink-2);margin:0 0 22px;max-width:74ch;
+    padding-left:13px;border-left:2px solid var(--accent)}
+  .finding b{color:var(--ink);font-weight:650}
+
+  .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
+  .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
+    gap:6px 30px;justify-content:space-between;font-size:12.5px;color:var(--ink-3)}
+  .sitefoot p{margin:0;max-width:62ch}
+  .sitefoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .sitefoot a:hover{text-decoration:underline}
+
+  @media(max-width:620px){
+    .sitebar-in{padding:0 16px;min-height:0}
+    .sitenav{gap:0 15px;padding-bottom:7px}
+    .sitenav a{font-size:11px;letter-spacing:.04em}
+    .brand{padding:10px 0 6px}
+  }
+</style>
 </head>
 <body>
+<header class="sitebar">
+  <div class="sitebar-in">
+    <a class="brand" href="index.html">
+      <span class="brand-name">Hull Tactical</span><span class="brand-sub">Research</span>
+    </a>
+    <nav class="sitenav">
+      <a href="index.html">Overview</a>
+      <a href="term_structure.html">VIX term structure</a>
+      <a href="sizing.html">Position sizing</a>
+      <a href="forecaster.html" class="on">Volatility forecaster</a>
+      <a href="review.html">Research note</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--surface-2:#f4f6f7;--line:#d7dde1;
@@ -135,13 +205,12 @@
 </header>
 <div class="wrap">
   <div class="pagehead">
-    <p class="eyebrow" style="margin:0 0 6px">Hull Tactical &middot; Research</p>
-    <h1>Short-horizon volatility &mdash; busy-window forecaster</h1>
-    <p class="pagenote">The estimated chance the next 10 seconds is busy (top third by volatility),
-      from the current order flow. 14-day research model, out-of-sample AUC 0.89.</p>
-    <p class="nav"><a href="index.html">&larr; Overview</a> &nbsp;&middot;&nbsp;
-      <a href="term_structure.html">VIX term structure</a> &nbsp;&middot;&nbsp;
-      <a href="sizing.html">Position sizing</a></p>
+    <h1>Busy-window forecaster</h1>
+    <p class="pagenote">The estimated chance that the next 10 seconds is busy, meaning the top third
+      by volatility, read from the order flow as it stands.</p>
+    <p class="meta"><span><b>ES, 14-day research model</b></span><span>out-of-sample AUC 0.89</span><span>base rate 33%</span></p>
+    <p class="finding"><b>Calm reads below 30%, busy above 55%.</b> Trading the calm windows cuts the
+      volatility traded through by about 29%, which is an execution saving rather than a signal.</p>
   </div>
 
   <div class="board">
@@ -198,11 +267,6 @@
     </div>
   </div>
 
-  <div class="foot">
-    <span>base rate 33% &middot; verdict bands calm &lt;30% &middot; busy &gt;55%</span>
-    <span><a href="https://github.com/CoreyZhang76/vix-term-structure"
-      style="color:var(--accent);text-decoration:none;font-weight:600">Code &amp; methodology</a></span>
-  </div>
 </div>
 <div class="tip" id="tip"></div>
 
@@ -325,7 +389,7 @@
     pAll=rows.map(r=>{let z=MODEL.intercept;MODEL.feats.forEach((f,k)=>{z+=f.coef*((r[k+1]-f.mean)/f.std);});return 1/(1+Math.exp(-z));});
     busyAll=rows.map(r=>r[r.length-1]);tAll=rows.map(r=>r[0]);rIdx=0;if(playing)stop();
     [...document.querySelectorAll("#dayseg button")].forEach((b,j)=>b.setAttribute("aria-pressed",j===i));
-    $("#rdate").textContent=`streaming ${REPLAY.days[i].date} — ${Math.round(REPLAY.days[i].busy_rate*100)}% of windows were busy`;
+    $("#rdate").textContent=`streaming ${REPLAY.days[i].date}, ${Math.round(REPLAY.days[i].busy_rate*100)}% of windows were busy`;
     stripUpdate(0);}
   function buildDaySeg(){const seg=$("#dayseg");
     seg.innerHTML=REPLAY.days.map((d,i)=>`<button data-d="${i}"${i===0?' aria-pressed="true"':''}>${d.date.slice(5)}</button>`).join("");
@@ -364,5 +428,13 @@
 })();
 </script>
 
+</main>
+
+<footer class="sitefoot">
+  <div class="sitefoot-in">
+    <p>Out-of-sample results on real market data. Research prototypes, not live strategies.</p>
+    <p><a href="https://github.com/CoreyZhang76/vix-term-structure">Method and full results</a> (internal)</p>
+  </div>
+</footer>
 </body>
 </html>

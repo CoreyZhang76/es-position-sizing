@@ -3,9 +3,79 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The VIX calendar spread — Hull Tactical</title>
+<title>The VIX calendar spread | Hull Tactical Research</title>
+<style>
+  :root{
+    --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
+    --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
+    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+  main{display:block;flex:1}
+
+  .sitebar{position:sticky;top:0;z-index:30;background:var(--surface);
+    border-bottom:1px solid var(--line);box-shadow:0 1px 2px #0126430a}
+  .sitebar-in{max-width:1000px;margin:0 auto;padding:0 22px;display:flex;align-items:center;
+    justify-content:space-between;gap:10px 26px;flex-wrap:wrap;min-height:58px}
+  .brand{display:flex;align-items:baseline;gap:9px;text-decoration:none;padding:11px 0 9px}
+  .brand-name{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.015em}
+  .brand-sub{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-3)}
+  .sitenav{display:flex;flex-wrap:wrap;gap:0 22px}
+  .sitenav a{font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+    color:var(--ink-3);text-decoration:none;padding:7px 0 6px;border-bottom:2px solid transparent;
+    white-space:nowrap}
+  .sitenav a:hover{color:var(--ink)}
+  .sitenav a.on{color:var(--ink);border-bottom-color:var(--accent)}
+
+  main>.wrap{padding-top:28px}
+
+  /* Standing facts a reader needs before they touch a control, and the one finding that
+     constrains how to read the page. Both are shell-owned so every page states them alike. */
+  .meta{display:flex;flex-wrap:wrap;margin:0 0 14px;font-size:12px;
+    letter-spacing:.02em;color:var(--ink-3)}
+  .meta span{display:inline-flex;align-items:center}
+  .meta span:not(:last-child)::after{content:"";width:3px;height:3px;border-radius:50%;
+    background:currentColor;opacity:.5;margin:0 11px}
+  .meta b{color:var(--ink-2);font-weight:650}
+  .finding{font-size:13.5px;line-height:1.6;color:var(--ink-2);margin:0 0 22px;max-width:74ch;
+    padding-left:13px;border-left:2px solid var(--accent)}
+  .finding b{color:var(--ink);font-weight:650}
+
+  .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
+  .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
+    gap:6px 30px;justify-content:space-between;font-size:12.5px;color:var(--ink-3)}
+  .sitefoot p{margin:0;max-width:62ch}
+  .sitefoot a{color:var(--accent);text-decoration:none;font-weight:600}
+  .sitefoot a:hover{text-decoration:underline}
+
+  @media(max-width:620px){
+    .sitebar-in{padding:0 16px;min-height:0}
+    .sitenav{gap:0 15px;padding-bottom:7px}
+    .sitenav a{font-size:11px;letter-spacing:.04em}
+    .brand{padding:10px 0 6px}
+  }
+</style>
 </head>
 <body>
+<header class="sitebar">
+  <div class="sitebar-in">
+    <a class="brand" href="index.html">
+      <span class="brand-name">Hull Tactical</span><span class="brand-sub">Research</span>
+    </a>
+    <nav class="sitenav">
+      <a href="index.html">Overview</a>
+      <a href="term_structure.html">VIX term structure</a>
+      <a href="sizing.html">Position sizing</a>
+      <a href="forecaster.html">Volatility forecaster</a>
+      <a href="review.html" class="on">Research note</a>
+    </nav>
+  </div>
+</header>
+
+<main>
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
@@ -58,15 +128,10 @@
 </style>
 
 <div class="wrap">
-  <p class="eyebrow">Hull Tactical &middot; Research note</p>
-  <h1>The VIX calendar spread: premium, crash exposure and hedge ratio</h1>
-  <p class="sub">Front-month against second-month VIX futures, 2013 to 2026, on Cboe per-contract
-    settlements. All results are out of sample. Every figure reproduces from the public data with no
-    vendor subscription.</p>
-  <p class="nav">Tools: <a href="term_structure.html">VIX term structure</a> &middot;
-    <a href="sizing.html">Position sizing</a> &middot;
-    <a href="forecaster.html">Volatility forecaster</a> &middot;
-    <a href="index.html">Overview</a></p>
+  <h1>The VIX calendar spread</h1>
+  <p class="sub">Premium, crash exposure and where to set the hedge ratio.</p>
+  <p class="meta"><span><b>Front against second month, 2013 to 2026</b></span><span>Cboe per-contract settlements</span><span>out of sample</span></p>
+  <p class="finding">Every figure here reproduces from public data with no vendor subscription.</p>
 
   <section>
     <h2>Summary</h2>
@@ -401,13 +466,15 @@
     </ul>
   </section>
 
-  <p class="foot">
-    Code and full results: <a href="https://github.com/CoreyZhang76/vix-term-structure">github.com/CoreyZhang76/vix-term-structure</a>.
-    Tools: <a href="term_structure.html">VIX term structure</a> &middot;
-    <a href="sizing.html">position sizing</a> &middot;
-    <a href="forecaster.html">volatility forecaster</a>.
-  </p>
 </div>
 
+</main>
+
+<footer class="sitefoot">
+  <div class="sitefoot-in">
+    <p>Out-of-sample results on real market data. Research prototypes, not live strategies.</p>
+    <p><a href="https://github.com/CoreyZhang76/vix-term-structure">Method and full results</a> (internal)</p>
+  </div>
+</footer>
 </body>
 </html>
