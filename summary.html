@@ -4,11 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hull Tactical Research | Forecasting and trading volatility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
     --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    /* Montserrat for headings and Roboto for text, matching hulltacticalfunds.com. Both fall
+       back to the system stack, so the pages hold their shape if the webfont never arrives. */
+    --display:"Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    --sans:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
+    --mono:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -30,7 +37,28 @@
   .sitenav a:hover{color:var(--ink)}
   .sitenav a.on{color:var(--ink);border-bottom-color:var(--accent)}
 
-  main>.wrap{padding-top:28px}
+  /* margin:0 because a page fragment may style bare <section>, and the hero is one. */
+  .hero{margin:0;background:linear-gradient(155deg,#012643 0%,#023a63 60%,#02507f 100%);color:#fff}
+  .hero-in{max-width:1000px;margin:0 auto;padding:46px 22px 42px}
+  .hero h1{font-family:var(--display);font-size:clamp(25px,4.1vw,42px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.005em;line-height:1.14;margin:0;color:#fff}
+  .hero p{margin:15px 0 0;max-width:66ch;font-size:15.5px;line-height:1.65;color:#c8dcea}
+
+  main>.wrap{padding-top:34px}
+  main .wrap>h1{display:none}
+
+  /* Section headings in the house style: uppercase, accent, no rule underneath. Scoped to
+     section-level headings, so a heading that labels a control panel keeps the page own style. */
+  main section>h2{font-family:var(--display);font-size:clamp(16px,2.3vw,21px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.01em;color:var(--accent);
+    margin:0 0 15px;padding:0;border:0}
+  main section{margin-top:40px}
+  main p{font-size:15px;line-height:1.72}
+  /* One plain sentence under a section heading, saying what the section establishes before the
+     reader decides whether to read the detail under it. */
+  main .lead{font-size:16.5px;line-height:1.62;color:var(--ink);font-weight:500;
+    margin:0 0 17px;max-width:66ch}
+  main li{font-size:15px;line-height:1.72}
 
   .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
   .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
@@ -63,14 +91,19 @@
   </div>
 </header>
 
+<section class="hero">
+  <div class="hero-in">
+    <h1>Forecasting and trading volatility</h1>
+    <p>How wide the range of outcomes is in the S&amp;P 500, from the order book at seconds out to the VIX term structure at months.</p>
+  </div>
+</section>
+
 <main>
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
     --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
     --shadow:0 1px 2px #0126430f,0 5px 14px #0126430a;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
-    --mono:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.6;
@@ -109,57 +142,55 @@
 </style>
 
 <div class="wrap">
-  <h1>Forecasting and trading volatility</h1>
-  <p class="sub">How wide the range of outcomes is in the S&amp;P 500, from the order book at
-    seconds out to the VIX term structure at months.</p>
-
   <div class="tiles">
-    <div class="tile"><div class="n">0.83&ndash;0.90</div>
-      <div class="l">Forecast accuracy (AUC), calm vs busy windows, out-of-sample</div></div>
-    <div class="tile"><div class="n">~29%</div>
-      <div class="l">Less volatility traded through by timing execution</div></div>
-    <div class="tile"><div class="n">&frac14;&times;</div>
-      <div class="l">The crash exposure of a naked short-vol trade, via the VIX calendar spread</div></div>
+    <div class="tile"><div class="n">0.89</div>
+      <div class="l">Accuracy of the call on whether the next ten seconds is busy</div></div>
+    <div class="tile"><div class="n">29%</div>
+      <div class="l">Less volatility traded through, by executing in the calm windows</div></div>
+    <div class="tile"><div class="n">&frac18;</div>
+      <div class="l">The crash exposure of an outright short, once hedged as a calendar spread</div></div>
   </div>
 
   <section>
     <h2>What works</h2>
     <ul>
-      <li><b>The forecaster.</b> Predicts whether the next few seconds are calm or busy, at an
-        accuracy (AUC) of 0.83 to 0.90 on real ES.</li>
-      <li><b>Execution timing.</b> Trading in the calm windows cuts the volatility traded through by
-        about 29%. Confirmed on the real order book, and a net saving for orders up to about 0.5% of
-        daily volume.</li>
-      <li><b>VIX term structure.</b> The volatility risk premium is real and large, with VIX futures
-        running 6.2 points above later realized volatility on 91% of days. A front against next
-        calendar spread harvests it at about an eighth of the crash risk of a naked short, a crash
-        beta of +0.48 against +3.68 over 2013 to 2026. It does not earn more per unit of risk than
-        that naked short: 0.51 &plusmn;0.58 against 0.50 &plusmn;0.57, paired bootstrap
-        p&nbsp;=&nbsp;0.94. The win is structural rather than a free Sharpe, because it trades the
-        shape and sheds the crash.</li>
-      <li><b>Micro to macro.</b> The two scales connect. The intraday forecaster's calm or busy
-        call works as a risk filter for the term-structure trade, flagging when to step out of short
-        volatility and cutting the naked short's drawdown from &minus;89% to &minus;62%. It flags the
-        risky regime without predicting the curve's direction.</li>
+      <li><b>The forecaster.</b> It calls whether the next few seconds will be calm or busy, and
+        it is right often enough to act on, scoring 0.83 to 0.90 on real ES data it has not
+        seen.</li>
+      <li><b>Execution timing.</b> Waiting for the calm windows cuts the volatility an order trades
+        through by about 29%. That was confirmed on the real order book, and it stays a net saving
+        for orders up to roughly 0.5% of the day's volume.</li>
+      <li><b>VIX term structure.</b> Insurance against market falls is reliably overpriced. VIX
+        futures sit about 6 points above the volatility that actually arrives, on 91% of days.
+        Selling the front contract collects that, and takes the full crash with it. Holding a later
+        month against it collects a similar amount with roughly an eighth of the crash exposure. It
+        does not earn more per unit of risk, so the gain is in what it avoids rather than in what it
+        makes.</li>
+      <li><b>The two scales connect.</b> The intraday calm or busy call also works as a risk
+        filter on the much slower VIX trade. Stepping out of short volatility when it flags a busy
+        regime cuts the outright short's worst drawdown from &minus;89% to &minus;62%. It recognises
+        the dangerous regime. It does not predict which way the curve goes.</li>
     </ul>
   </section>
 
   <section>
     <h2>What did not work</h2>
     <ul>
-      <li><b>Direction.</b> Predictable (88% of the time) but smaller than the spread, so about zero
-        after costs.</li>
-      <li><b>Position sizing.</b> Controls risk and drawdown; it does not add return.</li>
-      <li><b>Cross-asset VIX.</b> Adds nothing to the short-term ES forecast.</li>
+      <li><b>Predicting direction.</b> The next move is predictable 88% of the time, but the move
+        is smaller than the bid-ask spread, so there is nothing left after costs.</li>
+      <li><b>Position sizing as a source of return.</b> It controls risk and drawdown. It does not
+        make more money.</li>
+      <li><b>Using VIX to forecast ES.</b> Adds nothing the ES order book does not already say.</li>
     </ul>
   </section>
 
   <section>
     <h2>Status</h2>
     <ul>
-      <li><b>Deployable now.</b> The forecaster and a calm-window execution scheduler on ES.</li>
-      <li><b>Needs more.</b> Desk execution data to price the timing saving in dollars, and more
-        data months to test across regimes.</li>
+      <li><b>Ready to use.</b> The forecaster, and a scheduler that routes orders into the calm
+        windows on ES.</li>
+      <li><b>Still needed.</b> Desk execution data, to convert the timing saving into dollars, and
+        more months of data to test it across different regimes.</li>
     </ul>
   </section>
 

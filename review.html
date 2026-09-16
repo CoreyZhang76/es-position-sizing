@@ -4,11 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The VIX calendar spread | Hull Tactical Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
     --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    /* Montserrat for headings and Roboto for text, matching hulltacticalfunds.com. Both fall
+       back to the system stack, so the pages hold their shape if the webfont never arrives. */
+    --display:"Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    --sans:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
+    --mono:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -30,7 +37,28 @@
   .sitenav a:hover{color:var(--ink)}
   .sitenav a.on{color:var(--ink);border-bottom-color:var(--accent)}
 
-  main>.wrap{padding-top:28px}
+  /* margin:0 because a page fragment may style bare <section>, and the hero is one. */
+  .hero{margin:0;background:linear-gradient(155deg,#012643 0%,#023a63 60%,#02507f 100%);color:#fff}
+  .hero-in{max-width:1000px;margin:0 auto;padding:46px 22px 42px}
+  .hero h1{font-family:var(--display);font-size:clamp(25px,4.1vw,42px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.005em;line-height:1.14;margin:0;color:#fff}
+  .hero p{margin:15px 0 0;max-width:66ch;font-size:15.5px;line-height:1.65;color:#c8dcea}
+
+  main>.wrap{padding-top:34px}
+  main .wrap>h1{display:none}
+
+  /* Section headings in the house style: uppercase, accent, no rule underneath. Scoped to
+     section-level headings, so a heading that labels a control panel keeps the page own style. */
+  main section>h2{font-family:var(--display);font-size:clamp(16px,2.3vw,21px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.01em;color:var(--accent);
+    margin:0 0 15px;padding:0;border:0}
+  main section{margin-top:40px}
+  main p{font-size:15px;line-height:1.72}
+  /* One plain sentence under a section heading, saying what the section establishes before the
+     reader decides whether to read the detail under it. */
+  main .lead{font-size:16.5px;line-height:1.62;color:var(--ink);font-weight:500;
+    margin:0 0 17px;max-width:66ch}
+  main li{font-size:15px;line-height:1.72}
 
   .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
   .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
@@ -63,13 +91,18 @@
   </div>
 </header>
 
+<section class="hero">
+  <div class="hero-in">
+    <h1>The VIX calendar spread</h1>
+    <p>Premium, crash exposure and where to set the hedge ratio. Front against second month VIX futures, 2013 to 2026, out of sample.</p>
+  </div>
+</section>
+
 <main>
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
     --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;--warn:#b1543e;--good:#1c7a63;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
-    --mono:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.6;
@@ -116,19 +149,15 @@
 </style>
 
 <div class="wrap">
-  <h1>The VIX calendar spread</h1>
-  <p class="sub">Premium, crash exposure and where to set the hedge ratio. Front-month against
-    second-month VIX futures, 2013 to 2026, on Cboe per-contract settlements. All results are out of
-    sample, and every figure reproduces from public data with no vendor subscription.</p>
-
   <section>
     <h2>Summary</h2>
     <ul>
       <li>VIX futures price about 6 points above the volatility that follows, on 91% of days.
         The premium is large and persistent.</li>
-      <li>An outright short of the front contract collects it and carries the full equity crash.
-        On 5 February 2018 the front future rose from 15.6 to 33.2 in one day, more than the whole
-        notional behind an unlevered position.</li>
+      <li>Shorting the front contract collects that premium and takes the full equity crash with
+        it. On 5 February 2018 the front future went from 15.6 to 33.2 in a single day, which is
+        more than the entire capital behind an unlevered position. The trade does not draw down, it
+        ends.</li>
       <li>The calendar spread collects a similar premium with roughly an eighth of that crash
         exposure, though that ratio is estimated on 167 crash days and carries a wide interval. It
         does not produce a higher return per unit of risk.</li>
@@ -141,15 +170,16 @@
 
   <section>
     <h2>Data and construction</h2>
+    <p class="lead">The curve is rebuilt from free Cboe settlement files, and positions are held in named contracts rather than in a stitched-together price series.</p>
     <p>The curve is rebuilt from Cboe per-contract settlement files: 173 contracts and 30,714
       contract-days covering 3,341 trading days from May 2013. Settlement prices are used rather
       than closes, since settlement is the price positions are marked at and the price a roll
       transacts against. Per-contract open interest comes with the same files and supports the
       crowding test below.</p>
-    <p>Positions are held in named expiries and rolled with a two-day buffer. Differencing a
-      "front month" price series instead would treat the roll-day gap between two different
-      contracts as profit and loss, which materially distorts the apparent carry. Returns are
-      profit and loss over the gross notional of both legs.</p>
+    <p>Positions are held in named expiries and rolled with a two-day buffer. The shortcut is to
+      difference a continuous "front month" price series instead, but that books the roll-day gap
+      between two different contracts as profit, which invents most of the apparent carry. Returns
+      are profit and loss over the gross notional of both legs.</p>
     <p>The roll happens three trading days before expiry, without exception across all 160
       contracts held as the front leg. Expiry falls on a Wednesday, so the position normally exits
       at the Friday close and takes on the next contract on Monday: a single-day switch with no gap
@@ -171,6 +201,7 @@
 
   <section>
     <h2>Return and crash exposure</h2>
+    <p class="lead">Both trades earn the same per unit of risk. The spread's advantage is that it survives the days that destroy the outright short.</p>
     <div class="tw">
       <table>
         <thead><tr><th>2013 to 2026</th><th>outright short front</th><th>calendar spread</th></tr></thead>
@@ -186,40 +217,38 @@
         </tbody>
       </table>
     </div>
-    <p>The difference in Sharpe is +0.01 with a 95% interval of &minus;0.26 to +0.28 and
-      p&nbsp;=&nbsp;0.94 on a paired block bootstrap over common dates. The two trades are not
-      distinguishable on risk-adjusted return. An earlier figure of 0.73 against 0.48 was a point
-      estimate on an eight-year sample without a standard error, and the difference fell within that
-      error.</p>
+    <p>Per unit of risk the two trades earn the same. The gap is +0.01, the 95% interval runs
+      from &minus;0.26 to +0.28, and the test returns p&nbsp;=&nbsp;0.94, so nothing separates them.
+      An earlier version of this note reported 0.73 against 0.48. That was a single estimate on
+      eight years with no error bar attached, and the gap sat comfortably inside the error.</p>
     <p>The reduction in crash exposure is the durable result. Measured on the S&amp;P worst 5% of
       days, the spread carries 13% of the outright short's exposure.</p>
-    <p>That measure deserves its interval spelled out, because it is the one claim here worth
-      defending and it rests on a much smaller sample than the row above it. The worst 5% of days
-      is 167 observations out of 3,336, so a block bootstrap puts the outright short's crash beta
-      anywhere between +2.4 and +9.8. The difference between the two, &minus;3.19 with an interval
-      of &minus;9.25 to &minus;1.61, does exclude zero. A symmetric p-value on the same bootstrap
-      gives 0.089 and disagrees, which happens because the statistic is heavily skewed; the
-      percentile interval is the more reliable of the two here.</p>
-    <p>So the direction is established and the magnitude is not pinned down. The ratio of 13% is a
-      point estimate that could plausibly sit anywhere from roughly 3% to 50%. The claim to make is
-      that crash exposure is materially lower, on 167 crash days, with a wide band on how much
-      lower.</p>
+    <p>That number needs its uncertainty stated, because it is the one claim here worth defending
+      and it rests on far less data than the rows above it. The worst 5% of days is 167 days out of
+      3,336. On so few, the outright short's crash exposure could sit anywhere between +2.4 and
+      +9.8. The gap between the two trades is &minus;3.19, and its interval of &minus;9.25 to
+      &minus;1.61 stays clear of zero.</p>
+    <p>So the direction holds and the size does not. The 13% figure could plausibly be anywhere from
+      3% to 50%. What the data supports is that crash exposure is much lower, measured on 167 crash
+      days, with a wide band around how much lower.</p>
   </section>
 
   <section>
     <h2>Stability across the sample</h2>
+    <p class="lead">The weak recent years are not decay. Losing years appear right through the history, including the earliest ones.</p>
     <p>Losing years are 2013, 2014, 2015, 2018 and 2024. Three of these are the earliest years in
       the data, before the trade could plausibly have become crowded, which is inconsistent with a
       reading of the recent weakness as structural decay.</p>
-    <p>Tested directly, neither a linear time trend nor a break at 2024 is significant on its own.
-      They appear significant only when entered together, where they are collinear at 0.71 and take
-      large offsetting signs. Per-contract open interest shows no crowding: it carries no
-      information for returns once carry is controlled for, and the most heavily positioned quartile
-      is not the worst performing.</p>
+    <p>Tested directly, neither a downward trend over time nor a break at 2024 is significant on
+      its own. They look significant only when fitted together, and there the two overlap so heavily
+      that the model splits the effect between them with large offsetting signs. Open interest
+      shows no sign of crowding either: it says nothing about returns once carry is accounted for,
+      and the most heavily positioned quartile is not the worst performing one.</p>
   </section>
 
   <section>
     <h2>Correlation with equities</h2>
+    <p class="lead">A one-for-one spread still moves with the market. It turns into a hedge only once the long leg is enlarged.</p>
     <p>Selling volatility pays while markets are calm and loses when they fall, so a short
       volatility book moves with the market rather than against it. The one-for-one spread is
       positively correlated with the S&amp;P and is not a hedge. The sign turns negative only when
@@ -248,10 +277,12 @@
 
   <section>
     <h2>Hedge ratio and shock-beta sizing</h2>
-    <p>An alternative to a fixed contract ratio is to size the long leg by its sensitivity to VIX
-      shocks, holding the ratio of the two legs' shock betas. Regressed on daily log changes in VIX,
-      VXX has a beta of 0.504 and VXZ 0.171. The rolling ratio is not stable: it averages 3.93 over
-      2018 to 2020, 2.38 over 2021 to 2023 and 2.59 over 2024 to 2026.</p>
+    <p class="lead">Size the long leg by how hard a VIX shock hits each leg, and recalculate it on the roll date.</p>
+    <p>Rather than fix the number of contracts, size the long leg by how much it actually moves
+      when VIX moves. Against daily changes in VIX, VXX moves 0.504 and VXZ moves 0.171, so it
+      takes roughly three units of VXZ to offset one of VXX. That ratio drifts: it averages 3.93
+      over 2018 to 2020, 2.38 over 2021 to 2023 and 2.59 over 2024 to 2026, which is why it is
+      worth re-estimating rather than fixing.</p>
     <p>The ratio is not sensitive to how often the data is sampled. Measured on weekly rather
       than daily returns it is 3.01 against 2.94 for VXX over VXZ, and 4.64 against 4.62 for UVXY
       over VXZ. Fortnightly and monthly sampling stay in the same range. Individual betas come out
@@ -313,10 +344,10 @@
       <p class="cap">Coefficients fitted on an expanding window, so no rule uses future data.</p>
     </div>
     <p>Every slope rule is worse than the shock beta and roughly doubles the drawdown. The fitted
-      versions do reach a more negative crash beta, but only because they happen to carry a larger
-      average hedge, not because the slope is informative. The likely reason is that slope measures
-      how much the curve pays, while the ratio needs to know how differently the two legs respond to
-      a shock. Those are related in principle and decoupled in this data.</p>
+      versions do end up with less crash exposure, but only because they happen to hold a bigger
+      hedge on average, not because the slope told them anything. The likely reason is that the
+      slope measures how much the curve pays, while the ratio needs to know how differently the two
+      legs react to a shock. Those should be related and in this data they are not.</p>
     <p>This is the third independent test in which the slope of the VIX curve fails to carry
       information: it does not time the spread, it adds nothing to a volatility forecast once the
       level is included, and it does not set the hedge ratio.</p>
@@ -364,6 +395,7 @@
 
   <section>
     <h2>The curve as a forecasting input</h2>
+    <p class="lead">The level of the VIX curve helps forecast volatility. Its shape adds nothing.</p>
     <p>Tested walk-forward against a HAR baseline of trailing realized volatility at 5, 21 and 63
       days, the front VIX price adds 0.05 to 0.08 out-of-sample R&sup2; on forward realized
       volatility. The increment is largest and only significant at the 21-day horizon. Turnover is
@@ -376,17 +408,18 @@
 
   <section>
     <h2>Intraday order flow</h2>
-    <p>Whether ES order flow leads the front VIX future was tested over 22 days of order-book data.
-      Out-of-sample sign accuracy is 52.6%, 47.5% and 47.3% at one, two and five minutes, which
-      spans a coin flip. On the size of the move, against a benchmark of the VIX own recent
-      volatility, which alone explains 11 to 17% out of sample, ES activity adds &minus;0.006,
-      +0.001 and +0.005 R&sup2; against a pre-specified threshold of +0.005 at two or more horizons.
-      The result is null.</p>
-    <p>An earlier correlation of +0.13 between ES quote activity and the size of the next minute's
-      VIX move is withdrawn. It aligned 46.5 million order-book rows onto a series containing about
-      3,300 independent minutes and was compared against zero rather than a benchmark. ES activity
-      tracks contemporaneous VIX activity, which already predicts the next move because volatility
-      clusters.</p>
+    <p class="lead">ES order flow does not predict the front VIX future, and an earlier positive result is withdrawn.</p>
+    <p>Whether ES order flow leads the front VIX future was tested on 22 days of order-book data.
+      Getting the direction right came out at 52.6%, 47.5% and 47.3% over one, two and five minutes,
+      which is a coin flip. On the size of the move, VIX's own recent volatility already explains 11
+      to 17% on its own, and adding ES activity to it changes that by &minus;0.006, +0.001 and
+      +0.005. The bar set before the test was +0.005 at two horizons or more. The result is
+      nothing.</p>
+    <p>An earlier correlation of +0.13 between ES quote activity and the next minute's VIX move is
+      withdrawn. It stretched 46.5 million order-book rows across roughly 3,300 genuinely
+      independent minutes, and it was measured against zero instead of against a real benchmark. ES
+      activity moves with VIX activity at the same moment, and that already predicts the next minute
+      because volatility comes in clusters.</p>
   </section>
 
   <section>

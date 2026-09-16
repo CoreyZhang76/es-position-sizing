@@ -4,11 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Busy-window volatility forecaster | Hull Tactical Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
     --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    /* Montserrat for headings and Roboto for text, matching hulltacticalfunds.com. Both fall
+       back to the system stack, so the pages hold their shape if the webfont never arrives. */
+    --display:"Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    --sans:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
+    --mono:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -30,7 +37,28 @@
   .sitenav a:hover{color:var(--ink)}
   .sitenav a.on{color:var(--ink);border-bottom-color:var(--accent)}
 
-  main>.wrap{padding-top:28px}
+  /* margin:0 because a page fragment may style bare <section>, and the hero is one. */
+  .hero{margin:0;background:linear-gradient(155deg,#012643 0%,#023a63 60%,#02507f 100%);color:#fff}
+  .hero-in{max-width:1000px;margin:0 auto;padding:46px 22px 42px}
+  .hero h1{font-family:var(--display);font-size:clamp(25px,4.1vw,42px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.005em;line-height:1.14;margin:0;color:#fff}
+  .hero p{margin:15px 0 0;max-width:66ch;font-size:15.5px;line-height:1.65;color:#c8dcea}
+
+  main>.wrap{padding-top:34px}
+  main .wrap>h1{display:none}
+
+  /* Section headings in the house style: uppercase, accent, no rule underneath. Scoped to
+     section-level headings, so a heading that labels a control panel keeps the page own style. */
+  main section>h2{font-family:var(--display);font-size:clamp(16px,2.3vw,21px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.01em;color:var(--accent);
+    margin:0 0 15px;padding:0;border:0}
+  main section{margin-top:40px}
+  main p{font-size:15px;line-height:1.72}
+  /* One plain sentence under a section heading, saying what the section establishes before the
+     reader decides whether to read the detail under it. */
+  main .lead{font-size:16.5px;line-height:1.62;color:var(--ink);font-weight:500;
+    margin:0 0 17px;max-width:66ch}
+  main li{font-size:15px;line-height:1.72}
 
   .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
   .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
@@ -63,6 +91,13 @@
   </div>
 </header>
 
+<section class="hero">
+  <div class="hero-in">
+    <h1>Busy-window forecaster</h1>
+    <p>The estimated chance that the next ten seconds is busy, read from the order flow as it stands.</p>
+  </div>
+</section>
+
 <main>
 <style>
   :root{
@@ -71,8 +106,6 @@
     --accent:#009cde;--calm:#2f8f5b;--busy:#c85a1e;--warnc:#b0870f;
     --track:#dfe4e8;
     --shadow:0 1px 2px #0126430f,0 6px 16px #0126430a;
-    --mono:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.5;
@@ -89,12 +122,6 @@
     font-size:12px;color:var(--ink-2);background:var(--surface);border:1px solid var(--line);
     border-radius:2px;padding:5px 12px}
   .cav b{color:var(--accent)}
-  .site{background:var(--ink)}
-  .site-inner{max-width:1080px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;gap:12px}
-  .brand{color:#fff;font-weight:600;font-size:15px;letter-spacing:.01em}
-  .brand-tag{color:var(--accent);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
-  .brand-tag::before{content:"";display:inline-block;width:1px;height:12px;background:#ffffff40;
-    margin-right:12px;vertical-align:-1px}
   .pagehead{margin-bottom:8px}
   .pagehead h1{font-size:22px;margin:0 0 4px;letter-spacing:-.005em}
   .pagenote{font-size:13px;color:var(--ink-2);margin:0;max-width:74ch}
@@ -185,19 +212,7 @@
     white-space:nowrap;box-shadow:var(--shadow)}
 </style>
 
-<header class="site">
-  <div class="site-inner">
-    <span class="brand">Hull Tactical Asset Allocation</span>
-    <span class="brand-tag">Research</span>
-  </div>
-</header>
 <div class="wrap">
-  <div class="pagehead">
-    <h1>Busy-window forecaster</h1>
-    <p class="pagenote">The estimated chance that the next 10 seconds is busy, meaning the top third
-      by volatility, read from the order flow as it stands.</p>
-  </div>
-
   <div class="board">
     <!-- controls -->
     <div class="panel ctrls">

@@ -4,11 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The VIX term structure trade | Hull Tactical Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
     --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    /* Montserrat for headings and Roboto for text, matching hulltacticalfunds.com. Both fall
+       back to the system stack, so the pages hold their shape if the webfont never arrives. */
+    --display:"Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
+    --sans:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
+    --mono:"Roboto","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -30,7 +37,28 @@
   .sitenav a:hover{color:var(--ink)}
   .sitenav a.on{color:var(--ink);border-bottom-color:var(--accent)}
 
-  main>.wrap{padding-top:28px}
+  /* margin:0 because a page fragment may style bare <section>, and the hero is one. */
+  .hero{margin:0;background:linear-gradient(155deg,#012643 0%,#023a63 60%,#02507f 100%);color:#fff}
+  .hero-in{max-width:1000px;margin:0 auto;padding:46px 22px 42px}
+  .hero h1{font-family:var(--display);font-size:clamp(25px,4.1vw,42px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.005em;line-height:1.14;margin:0;color:#fff}
+  .hero p{margin:15px 0 0;max-width:66ch;font-size:15.5px;line-height:1.65;color:#c8dcea}
+
+  main>.wrap{padding-top:34px}
+  main .wrap>h1{display:none}
+
+  /* Section headings in the house style: uppercase, accent, no rule underneath. Scoped to
+     section-level headings, so a heading that labels a control panel keeps the page own style. */
+  main section>h2{font-family:var(--display);font-size:clamp(16px,2.3vw,21px);font-weight:600;
+    text-transform:uppercase;letter-spacing:.01em;color:var(--accent);
+    margin:0 0 15px;padding:0;border:0}
+  main section{margin-top:40px}
+  main p{font-size:15px;line-height:1.72}
+  /* One plain sentence under a section heading, saying what the section establishes before the
+     reader decides whether to read the detail under it. */
+  main .lead{font-size:16.5px;line-height:1.62;color:var(--ink);font-weight:500;
+    margin:0 0 17px;max-width:66ch}
+  main li{font-size:15px;line-height:1.72}
 
   .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
   .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
@@ -63,13 +91,19 @@
   </div>
 </header>
 
+<section class="hero">
+  <div class="hero-in">
+    <h1>The VIX term structure trade</h1>
+    <p>Short the front of the VIX curve and hold a later month against it. Drag the hedge to watch the crash come out.</p>
+  </div>
+</section>
+
 <main>
 <style>
   :root{
     --bg:#edf0f1;--surface:#ffffff;--line:#d7dde1;
     --ink:#012643;--ink-2:#5a5a5a;--ink-3:#8a9096;--accent:#009cde;--warn:#d9776a;--warn-ink:#b1543e;
     --shadow:0 1px 2px #0126430f,0 5px 14px #0126430a;
-    --sans:"Gotham Book","Gotham","Montserrat","Helvetica Neue",Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height:1.6;
@@ -167,10 +201,6 @@
 </style>
 
 <div class="wrap">
-  <h1>The VIX term structure trade</h1>
-  <p class="sub">Short the front of the VIX curve and hold a later month against it. Drag the hedge
-    to watch the crash come out.</p>
-
   <div class="panel">
     <div class="segrow">
       <span class="seglabel">Wrapper</span>
