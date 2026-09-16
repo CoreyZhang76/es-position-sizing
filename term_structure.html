@@ -36,13 +36,39 @@
   .segrow{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;margin-bottom:16px}
   .seglabel{font-size:12.5px;color:var(--ink-3)}
 
-  .ctrls{display:flex;flex-wrap:wrap;gap:18px 26px;align-items:flex-end;margin-bottom:6px}
-  .slider{flex:1;min-width:260px}
-  .slider label{display:block;font-size:12.5px;color:var(--ink-3);margin-bottom:6px}
-  .slider .hval{color:var(--ink);font-weight:650;font-size:14px}
   input[type=range]{accent-color:var(--accent)}
-  .slider input[type=range]{width:100%;margin:2px 0}
-  .ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-3);margin-top:1px}
+
+  .meterhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;
+    gap:2px 14px;margin:22px 0 11px}
+  .meterhead h2{margin:0;font-size:clamp(16px,2.2vw,21px);font-weight:650;letter-spacing:.015em;
+    text-transform:uppercase;color:var(--accent)}
+  .meterhead .cur{font-size:clamp(14px,1.9vw,19px);font-weight:650;letter-spacing:.015em;
+    text-transform:uppercase;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  .meter input[type=range]{-webkit-appearance:none;appearance:none;display:block;width:100%;height:34px;
+    background:none;border:0;margin:0;cursor:pointer}
+  .meter input[type=range]::-webkit-slider-runnable-track{height:26px;border-radius:2px;
+    background:linear-gradient(to right,var(--accent) 0 var(--fill,66.7%),#dde4e8 var(--fill,66.7%) 100%)}
+  .meter input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:34px;border:0;
+    border-radius:1px;background:var(--ink);margin-top:-4px}
+  .meter input[type=range]::-moz-range-track{height:26px;border-radius:2px;
+    background:linear-gradient(to right,var(--accent) 0 var(--fill,66.7%),#dde4e8 var(--fill,66.7%) 100%)}
+  .meter input[type=range]::-moz-range-thumb{width:9px;height:34px;border:0;border-radius:1px;
+    background:var(--ink)}
+
+  .ticks{position:relative;height:42px;margin-top:9px;border-top:1.5px solid var(--ink-3)}
+  .tk{position:absolute;top:0;transform:translateX(-50%);text-align:center}
+  .tk::before{content:"";display:block;width:1.5px;height:7px;background:var(--ink-3);margin:0 auto}
+  .tk .v{font-size:12.5px;color:var(--ink-2);margin-top:4px;font-variant-numeric:tabular-nums}
+  .tk .c{font-size:11.5px;color:var(--ink-3);margin-top:1px;white-space:nowrap}
+  .tk.l{transform:none;text-align:left}
+  .tk.l::before{margin:0}
+  .tk.r{transform:translateX(-100%);text-align:right}
+  .tk.r::before{margin:0 0 0 auto}
+  @media(max-width:700px){.tk .c{display:none}}
+  @media(max-width:560px){.tk .v{font-size:11px}.tk.q{display:none}}
+
+  .actions{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:2px 0 4px}
   .presets{display:flex;gap:8px}
   .presets button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--line);
     background:#fff;color:var(--ink-2);border-radius:3px;cursor:pointer}
@@ -76,9 +102,6 @@
   .tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:4px;
     padding:6px 8px;font-size:12px;color:var(--ink);box-shadow:var(--shadow);display:none;line-height:1.5;white-space:nowrap}
 
-  .purpose{font-size:13.5px;color:var(--ink-2);background:#f2f8fb;border-left:3px solid var(--accent);
-    border-radius:0 3px 3px 0;padding:11px 15px;margin:0 0 22px;max-width:76ch;line-height:1.55}
-  .purpose b{color:var(--ink);font-weight:650}
   .cap{font-size:13px;color:var(--ink-3);margin:18px 2px 0;max-width:78ch}
   .foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
   .foot a{color:var(--accent);text-decoration:none;font-weight:600}
@@ -88,16 +111,11 @@
 <div class="wrap">
   <p class="eyebrow">Hull Tactical &middot; Research</p>
   <h1>The VIX term structure trade</h1>
-  <p class="sub">Short the front of the VIX curve and hold a later month against it. That earns the
-    volatility premium with far less of the crash than an outright short. Drag the hedge to see the
-    crash come out, then turn on "size to a risk target" to run it as a book.</p>
+  <p class="sub">Short the front of the VIX curve and hold a later month against it. Drag the hedge
+    to watch the crash come out.</p>
   <p class="nav"><a href="summary.html">&larr; Overview</a> &nbsp;&middot;&nbsp;
     <a href="sizing.html">Position sizing</a> &nbsp;&middot;&nbsp;
     <a href="forecaster.html">Volatility forecaster</a></p>
-
-  <p class="purpose"><b>What this is:</b> a candidate crash-hedged way to be short volatility, and a new
-    volatility signal (the curve's slope and premium) that a price-direction model does not capture. A
-    research prototype on real out-of-sample data, not a live strategy.</p>
 
   <div class="panel">
     <div class="segrow">
@@ -112,20 +130,31 @@
       </span>
     </div>
 
-    <div class="ctrls">
-      <div class="slider">
-        <label>Hedge: how much of the long leg you hold against the short front
-          (<span class="hval" id="hval">1.00</span>&times;)</label>
-        <input type="range" id="hedge" min="0" max="150" value="100" step="1">
-        <div class="ends"><span id="end0">0&times; naked short front</span><span id="end1">1&times; calendar spread</span></div>
+    <div class="meterhead">
+      <h2>Hedge ratio</h2>
+      <div class="cur">Current: <span id="hval">1.00</span>&times;</div>
+    </div>
+    <div class="meter">
+      <input type="range" id="hedge" min="0" max="150" value="100" step="1">
+      <div class="ticks">
+        <div class="tk l" style="left:0"><div class="v">0</div><div class="c" id="end0">naked short front</div></div>
+        <div class="tk q" style="left:16.667%"><div class="v">0.25</div></div>
+        <div class="tk" style="left:33.333%"><div class="v">0.50</div></div>
+        <div class="tk q" style="left:50%"><div class="v">0.75</div></div>
+        <div class="tk" style="left:66.667%"><div class="v">1.00</div><div class="c" id="end1">calendar spread</div></div>
+        <div class="tk q" style="left:83.333%"><div class="v">1.25</div></div>
+        <div class="tk r" style="left:100%"><div class="v">1.50</div></div>
       </div>
-      <div class="presets">
-        <button id="pNaked">Naked short</button>
-        <button id="pSpread">Full spread</button>
-      </div>
-      <label class="chk" id="cgwrap"><input type="checkbox" id="contango"> hold only in contango</label>
     </div>
     <div class="hdesc" id="hdesc"></div>
+
+    <div class="actions">
+      <span class="presets">
+        <button id="pNaked">Naked short</button>
+        <button id="pSpread">Full spread</button>
+      </span>
+      <label class="chk" id="cgwrap"><input type="checkbox" id="contango"> hold only in contango</label>
+    </div>
 
     <div class="bookrow">
       <label class="chk"><input type="checkbox" id="vt"> Size to a risk target (run it as a book)</label>
@@ -155,9 +184,8 @@
     <canvas id="under"></canvas>
   </div>
 
-  <p class="cap">Growth of $1, log scale, out-of-sample. The default view is the raw trade; "size to a
-    risk target" runs it as a sized book, net of a yearly cost, and lets you mix it into a buy-and-hold
-    S&amp;P. The ETF window (2023 to 2026) is short and calm, so treat those figures as optimistic.</p>
+  <p class="cap">Growth of $1, log scale, out of sample. The ETF window is short and calm, so treat
+    those figures as optimistic.</p>
 
   <p class="foot">Method and full results:
     <a href="https://github.com/CoreyZhang76/vix-term-structure/blob/master/docs/TERM_STRUCTURE.md">docs/TERM_STRUCTURE.md</a>
@@ -326,6 +354,7 @@ var TS={"fut":{"dates":[20130520,20130521,20130522,20130523,20130524,20130528,20
   function refresh(){
     var D=compute(); last=D;
     $('hval').textContent=(+$('hedge').value/100).toFixed(2);
+    $('hedge').style.setProperty('--fill', (+$('hedge').value/1.5)+'%');
     var sg=(D.cur.sharpe>=0?'':'−')+Math.abs(D.cur.sharpe).toFixed(2);
     $('sharpe').innerHTML=sg+(isFinite(D.cur.se)?'<span class="pm"> ±'+(2*D.cur.se).toFixed(2)+'</span>':'');
     if(D.cur.ruin>0){
@@ -350,8 +379,8 @@ var TS={"fut":{"dates":[20130520,20130521,20130522,20130523,20130524,20130528,20
     $('midsel').style.display=etf?'':'none';
     $('cgwrap').style.display=etf?'none':'';
     if(etf)$('contango').checked=false;
-    $('end0').textContent=etf?'0× short VXX':'0× naked short front';
-    $('end1').textContent=etf?'1× short VXX + long mid':'1× calendar spread';
+    $('end0').textContent=etf?'short VXX':'naked short front';
+    $('end1').textContent=etf?'short VXX + long mid':'calendar spread';
     $('pSpread').textContent=etf?'ETF spread':'Calendar spread';
     refresh();
   }
