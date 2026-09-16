@@ -451,39 +451,49 @@
 
   <section>
     <h2>Method notes</h2>
+    <p class="lead">Five rules the numbers above were produced under.</p>
     <ul>
-      <li>Every Sharpe ratio is reported with a Newey-West standard error and a stationary block
-        bootstrap interval. Comparisons between strategies use a paired bootstrap on the difference
-        over common dates, so shared market exposure cancels.</li>
-      <li>Thresholds are fixed before a test is run. The order-flow threshold of +0.005 R&sup2; at
-        two or more horizons was set in advance.</li>
-      <li>Forecast models are nested so that each addition can be attributed, and are compared with
-        a Diebold-Mariano test at h&minus;1 lags, since overlapping forecasts have correlated
-        errors.</li>
-      <li>Drawdown is reported on constant notional. A compounded measure is undefined for a book
-        that can lose more than its notional in a day, which occurs here.</li>
-      <li>Predictive regressions use persistent regressors, so coefficients are subject to Stambaugh
-        bias and are read as indicative rather than calibrated.</li>
+      <li><b>Every return figure carries an error bar.</b> Market returns are streaky, so an
+        ordinary standard error understates the uncertainty. Two trades are compared day by day on
+        the dates they both traded, which cancels the market move they shared and leaves only the
+        difference between them.</li>
+      <li><b>The bar was set before the test ran.</b> The order-flow test had to clear a stated
+        margin at two horizons or more, written down first, so the result could not be graded
+        after the fact.</li>
+      <li><b>Forecasts are built up one piece at a time,</b> so any improvement can be traced to
+        the piece that caused it. Overlapping forecasts share errors, and the comparison accounts
+        for that rather than treating each day as fresh evidence.</li>
+      <li><b>Drawdown is measured on a fixed position size.</b> The usual compounded measure has
+        no meaning for a trade that can lose more than its capital in a day, which this one
+        can.</li>
+      <li><b>The forecasting coefficients are indicative, not calibrated.</b> The inputs move
+        slowly and overlap with what they predict, which is known to bias coefficients of this
+        kind. The direction is trustworthy, the exact size is not.</li>
     </ul>
   </section>
 
   <section>
     <h2>Limitations and next steps</h2>
+    <p class="lead">What would have to be true for these numbers to mislead, and what is missing.</p>
     <ul>
-      <li>Thirteen years contains five volatility spikes. That is enough to characterise the shape
-        of the exposure and not enough to place a confidence interval on the tail. Every figure here
-        is a backtest through crashes rather than a position held into one.</li>
-      <li>Shock betas are measured against spot VIX. Measuring against futures, or in points rather
-        than log changes, rescales both betas and moves the ratio, so the definition should be
-        reconciled before ratios are compared across sources.</li>
-      <li>The three-day roll buffer was chosen because the contract stops behaving in its final
-        days, not by optimisation, but the result is sensitive to it. Holding to the last trading
-        day gives a Sharpe of 0.23; exiting eleven trading days out gives 0.70. That spread sits
-        inside the error bar and is treated as noise, but three days should not be read as
-        optimal.</li>
-      <li>The intraday result rests on 22 days of one contract.</li>
-      <li>The VIX level clears a HAR baseline as a forecasting input. The test it has not faced is
-        incremental value over the existing production feature set.</li>
+      <li><b>Five crashes is not many.</b> Thirteen years holds five volatility spikes, which is
+        enough to show the shape of the exposure and not enough to put a confidence interval on the
+        tail. Everything here is a backtest run through crashes, not a position that was held into
+        one.</li>
+      <li><b>The ratio depends on how it is defined.</b> These betas are measured against spot
+        VIX. Measuring against futures instead, or in points rather than percentage changes,
+        rescales both legs and moves the ratio. Two desks quoting different numbers may simply be
+        measuring differently, so the definition has to be agreed before the numbers are
+        compared.</li>
+      <li><b>The roll date matters more than it should.</b> Three days was chosen because the
+        contract stops behaving in its final days, not by searching for the best answer. Even so,
+        holding to the last trading day gives 0.23 and exiting eleven days out gives 0.70. That
+        spread sits inside the error bar and is treated as noise, but three days is not the
+        optimum and should not be quoted as one.</li>
+      <li><b>The intraday result rests on 22 days of one contract.</b></li>
+      <li><b>The forecasting result has not faced the real test.</b> The VIX level beats a standard
+        volatility baseline. What it has not been asked is whether it adds anything on top of the
+        feature set already in production.</li>
     </ul>
   </section>
 
@@ -494,7 +504,7 @@
 <footer class="sitefoot">
   <div class="sitefoot-in">
     <p>Out-of-sample results on real market data. Research prototypes, not live strategies.</p>
-    <p><a href="https://github.com/CoreyZhang76/vix-term-structure">Method and full results</a> (internal)</p>
+    <p><a href="https://github.com/CoreyZhang76/vix-term-structure">Code and method</a></p>
   </div>
 </footer>
 </body>
