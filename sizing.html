@@ -32,18 +32,6 @@
 
   main>.wrap{padding-top:28px}
 
-  /* Standing facts a reader needs before they touch a control, and the one finding that
-     constrains how to read the page. Both are shell-owned so every page states them alike. */
-  .meta{display:flex;flex-wrap:wrap;margin:0 0 14px;font-size:12px;
-    letter-spacing:.02em;color:var(--ink-3)}
-  .meta span{display:inline-flex;align-items:center}
-  .meta span:not(:last-child)::after{content:"";width:3px;height:3px;border-radius:50%;
-    background:currentColor;opacity:.5;margin:0 11px}
-  .meta b{color:var(--ink-2);font-weight:650}
-  .finding{font-size:13.5px;line-height:1.6;color:var(--ink-2);margin:0 0 22px;max-width:74ch;
-    padding-left:13px;border-left:2px solid var(--accent)}
-  .finding b{color:var(--ink);font-weight:650}
-
   .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
   .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
     gap:6px 30px;justify-content:space-between;font-size:12.5px;color:var(--ink-3)}
@@ -183,9 +171,6 @@
   <div class="pagehead">
     <h1>Sizing a position with a volatility forecast</h1>
     <p class="pagenote">One signal, sized two ways at the same average risk.</p>
-    <p class="meta"><span><b>S&amp;P 500 futures, 2010 to 2026</b></span><span>no lookahead</span><span>illustration, not a track record</span></p>
-    <p class="finding"><b>Sizing controls risk, it does not add return.</b> Both lines carry the same
-      average risk, so a gap between them is drawdown and not profit.</p>
   </div>
 
   <div class="board">

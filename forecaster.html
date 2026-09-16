@@ -32,18 +32,6 @@
 
   main>.wrap{padding-top:28px}
 
-  /* Standing facts a reader needs before they touch a control, and the one finding that
-     constrains how to read the page. Both are shell-owned so every page states them alike. */
-  .meta{display:flex;flex-wrap:wrap;margin:0 0 14px;font-size:12px;
-    letter-spacing:.02em;color:var(--ink-3)}
-  .meta span{display:inline-flex;align-items:center}
-  .meta span:not(:last-child)::after{content:"";width:3px;height:3px;border-radius:50%;
-    background:currentColor;opacity:.5;margin:0 11px}
-  .meta b{color:var(--ink-2);font-weight:650}
-  .finding{font-size:13.5px;line-height:1.6;color:var(--ink-2);margin:0 0 22px;max-width:74ch;
-    padding-left:13px;border-left:2px solid var(--accent)}
-  .finding b{color:var(--ink);font-weight:650}
-
   .sitefoot{border-top:1px solid var(--line);background:var(--surface);margin-top:34px}
   .sitefoot-in{max-width:1000px;margin:0 auto;padding:20px 22px 28px;display:flex;flex-wrap:wrap;
     gap:6px 30px;justify-content:space-between;font-size:12.5px;color:var(--ink-3)}
@@ -208,9 +196,6 @@
     <h1>Busy-window forecaster</h1>
     <p class="pagenote">The estimated chance that the next 10 seconds is busy, meaning the top third
       by volatility, read from the order flow as it stands.</p>
-    <p class="meta"><span><b>ES, 14-day research model</b></span><span>out-of-sample AUC 0.89</span><span>base rate 33%</span></p>
-    <p class="finding"><b>Calm reads below 30%, busy above 55%.</b> Trading the calm windows cuts the
-      volatility traded through by about 29%, which is an execution saving rather than a signal.</p>
   </div>
 
   <div class="board">
