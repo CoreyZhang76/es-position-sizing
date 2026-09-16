@@ -396,14 +396,15 @@
   <section>
     <h2>The curve as a forecasting input</h2>
     <p class="lead">The level of the VIX curve helps forecast volatility. Its shape adds nothing.</p>
-    <p>Tested walk-forward against a HAR baseline of trailing realized volatility at 5, 21 and 63
-      days, the front VIX price adds 0.05 to 0.08 out-of-sample R&sup2; on forward realized
-      volatility. The increment is largest and only significant at the 21-day horizon. Turnover is
-      low, so no cost hurdle applies.</p>
-    <p>The shape of the curve adds nothing further. Slope and curvature contribute +0.02, +0.01 and
-      &minus;0.01 R&sup2; on top of the level, none significant on a Diebold-Mariano test. Slope
-      carries a t-statistic of &minus;4.7 in sample but correlates &minus;0.54 with the level and
-      largely restates it.</p>
+    <p>The baseline is the standard one: recent realized volatility over the past 5, 21 and 63
+      days. Adding the front VIX price to it explains another 5 to 8% of what happens next, tested
+      only on data the model had not seen. The improvement is largest at three weeks ahead, and
+      that is the one horizon where it clears the noise. Trading on it would be slow, so costs do
+      not eat it.</p>
+    <p>The shape of the curve adds nothing on top of that. Slope and curvature contribute +0.02,
+      +0.01 and &minus;0.01, and none of the three survives a test that accounts for overlapping
+      forecasts. Slope looks strong inside the sample, but it moves with the level closely enough
+      that it is largely restating it.</p>
   </section>
 
   <section>
