@@ -5,8 +5,7 @@ Two self-contained, interactive research illustrations from the **order-flow-vol
 
 ## Live site
 
-- **Position sizing with a volatility forecast** — https://coreyzhang76.github.io/es-position-sizing/
-- **Short-term volatility forecaster** — https://coreyzhang76.github.io/es-position-sizing/forecaster.html
+https://coreyzhang76.github.io/es-position-sizing/
 
 ## What they show
 
