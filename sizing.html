@@ -94,7 +94,7 @@
 <section class="hero">
   <div class="hero-in">
     <h1>Position sizing</h1>
-    <p>One signal, sized two ways at the same average risk.</p>
+    <p>One signal, sized two ways. Volatility targeting trades a little return for a much smaller drawdown.</p>
   </div>
 </section>
 
@@ -186,12 +186,6 @@
   .grid .val small{font-size:11px;color:var(--calm);margin-left:6px;font-weight:600}
   .grid .val small.bad{color:var(--busy)}
 
-  .takeaway{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:2px;
-    box-shadow:var(--shadow);padding:15px 17px}
-  .takeaway h3{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--ink-3);margin:0 0 8px;font-weight:600}
-  .takeaway p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.55}
-  .takeaway p b{color:var(--ink)}
 
   .foot{margin-top:22px;font-size:12.5px;color:var(--ink-3);line-height:1.6;max-width:70ch}
   .foot code{font-family:var(--mono);font-size:11.5px;background:var(--surface-2);
@@ -218,10 +212,6 @@
         <div class="grid" id="grid"></div>
       </div>
 
-      <div class="takeaway">
-        <h3>What changed</h3>
-        <p id="takeaway"></p>
-      </div>
     </div>
 
     <div class="panel ctrls">
@@ -425,7 +415,8 @@ var DATA={"dates":["20100608","20100609","20100610","20100611","20100613","20100
       msg='<b>Vol held at '+pctAbs(v.vol)+'</b> (target '+st.tv+'%); fixed ran at '+pctAbs(f.vol)+'.'+
           ddTxt+shTxt+'. Risk control, not extra return.';
     }
-    document.getElementById('takeaway').innerHTML = msg;
+    var tk = document.getElementById('takeaway');
+    if (tk) tk.innerHTML = msg;
   }
 
   // ---- state ----
