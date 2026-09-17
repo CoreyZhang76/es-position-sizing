@@ -187,16 +187,15 @@
       day to expiry the front sits an average of 0.26 vol points from spot, so almost no premium
       remains, and final settlement is a single SPX-options print.</p>
     <p>The chain holds 169 expiries, exactly one per calendar month, so no weekly contracts
-      contaminate the front and second selection. Seven do not fall on the standard Wednesday: five
-      because the reference third Friday of the following month was Good Friday, one because the
-      settlement Wednesday itself was Juneteenth in June 2024, and one where both were closed. On
+      contaminate the front and second selection. Seven do not fall on the standard Wednesday. Five of those follow a Good Friday in the reference
+      month. One follows Juneteenth in June 2024. One had both closed. On
       those months the exit is a Thursday, still three trading days out, since the count is in
       trading days rather than calendar days.</p>
-    <p>Three checks against independent data: the variance-space 30-day blend correlates 0.947
-      with the Cboe VIX index and sits above it on 83% of days; the front converges to spot at
-      expiry with a mean error of 0.098 vol points across 160 expiries; and a synthetic VXX built
-      only from the curve regresses on the traded fund at a beta of 1.06, with residual drift
-      matching its expense ratio.</p>
+    <p>The rebuilt curve was checked three times against independent data. The variance-space 30-day
+    blend correlates 0.947 with the Cboe VIX index and sits above it on 83% of days. The front
+    converges to spot at expiry with a mean error of 0.098 vol points across 160 expiries. A
+    synthetic VXX built only from the curve regresses on the traded fund at a beta of 1.06, with
+    residual drift matching its expense ratio.</p>
   </section>
 
   <section>
@@ -217,8 +216,8 @@
         </tbody>
       </table>
     </div>
-    <p>Per unit of risk the two trades earn the same. The gap is +0.01, the 95% interval runs
-      from &minus;0.26 to +0.28, and the test returns p&nbsp;=&nbsp;0.94, so nothing separates them.
+    <p>Per unit of risk the two trades earn the same. The gap is +0.01 and the 95% interval runs from &minus;0.26 to +0.28. The test returns
+    p&nbsp;=&nbsp;0.94, so nothing separates them.
       An earlier version of this note reported 0.73 against 0.48. That was a single estimate on
       eight years with no error bar attached, and the gap sat comfortably inside the error.</p>
     <p>The reduction in crash exposure is the durable result. Measured on the S&amp;P worst 5% of
@@ -285,10 +284,9 @@
       worth re-estimating rather than fixing.</p>
     <p>The ratio is not sensitive to how often the data is sampled. Measured on weekly rather
       than daily returns it is 3.01 against 2.94 for VXX over VXZ, and 4.64 against 4.62 for UVXY
-      over VXZ. Fortnightly and monthly sampling stay in the same range. Individual betas come out
-      marginally higher weekly, VXX at 0.54 against 0.50, which is consistent with the ETPs closing
-      at 4:00pm while VIX is calculated to 4:15pm, but the effect is around 7% and does not move the
-      ratio.</p>
+      over VXZ. Fortnightly and monthly sampling stay in the same range. Individual betas come out marginally higher weekly, VXX at 0.54 against 0.50. That is consistent
+      with the ETPs closing at 4:00pm while VIX is calculated to 4:15pm. The effect is around 7%
+      and does not move the ratio.</p>
     <div class="tw">
       <table>
         <thead><tr><th>sizing of the long leg</th><th>Sharpe</th><th>worst day</th>
@@ -317,16 +315,16 @@
       that way, Sharpe improves to 1.11 but crash beta moves from &minus;0.30 to +0.50 and the
       drawdown roughly doubles, because the hedge is smallest going into states where a further
       decline can still occur. A floor under the hedge would avoid this.</p>
-    <p>Short front against long middle is a position in the slope: at a one-for-one ratio the
-      profit and loss correlates 0.940 with the change in the front-to-second slope on non-roll
-      days, so the trade earns the slope's rate of change. That makes the slope the axis the trade
-      sits on rather than an input to sizing it, and the slope level does not predict its own change
-      (t = &minus;1.37), which is consistent with slope having failed as a timing signal.</p>
+    <p>Short front against long middle is a position in the slope. At a one-for-one ratio the profit and
+    loss correlates 0.940 with the change in the front-to-second slope on non-roll days, so the
+    trade earns the slope's rate of change. The slope is therefore the axis the trade sits on
+    rather than an input to sizing it. The slope level does not predict its own change, at t of
+    &minus;1.37, which is consistent with slope having failed as a timing signal.</p>
     <p>Setting the ratio from the slope was tested anyway and does not work. The reasoning is sound:
       a steep curve should mean a shock hits the front hard and the middle barely, implying a larger
-      ratio. Empirically the two are unrelated. The rolling shock-beta ratio correlates
-      &minus;0.07 with the current slope between the 30-day and 150-day points, and sorting by slope
-      quartile gives ratios of 2.73, 3.01, 2.71 and 2.46, which is not monotone.</p>
+      ratio. Empirically the two are unrelated. The rolling shock-beta ratio correlates &minus;0.07 with the current slope between the 30-day and
+      150-day points. Sorting by slope quartile gives 2.73, 3.01, 2.71 and 2.46, which is not
+      monotone.</p>
     <div class="tw">
       <table>
         <thead><tr><th>rule for setting the ratio</th><th>Sharpe</th><th>worst day</th>
@@ -348,9 +346,9 @@
       hedge on average, not because the slope told them anything. The likely reason is that the
       slope measures how much the curve pays, while the ratio needs to know how differently the two
       legs react to a shock. Those should be related and in this data they are not.</p>
-    <p>This is the third independent test in which the slope of the VIX curve fails to carry
-      information: it does not time the spread, it adds nothing to a volatility forecast once the
-      level is included, and it does not set the hedge ratio.</p>
+    <p>This is the third independent test in which the slope of the VIX curve fails to carry information.
+    It does not time the spread. It adds nothing to a volatility forecast once the level is
+    included. And it does not set the hedge ratio.</p>
     <p>When the ratio is recalculated matters more than which formula produces it. Drift below is
       the average gap between the ratio being carried and the current target, so it measures how
       stale the hedge is allowed to become.</p>
@@ -372,15 +370,15 @@
       <p class="cap">Turnover is units of the long leg traded per year. Ratio target is the rolling
         shock beta throughout, so only the update timing changes.</p>
     </div>
-    <p>Recalculating on the roll date is best, and it wins on every column at once: the fewest
-      updates, the lowest turnover, the highest Sharpe and the smallest drawdown. It also has the
-      operational argument, since both legs are already being traded that day, so the change in size
-      requires no separate trade, and it matches the monthly cycle the ratio itself moves on.</p>
+    <p>Recalculating on the roll date is best. It wins on every column at once: the fewest updates, the
+    lowest turnover, the highest Sharpe and the smallest drawdown. The operational argument points
+    the same way. Both legs are already being traded that day, so the change in size needs no
+    separate trade, and it matches the monthly cycle the ratio itself moves on.</p>
     <p>Updating daily is the worst of the frequent options and costs twice the turnover of the roll
       date for a lower Sharpe, which indicates it is tracking estimation noise rather than a moving
-      target. Drift bands, which tie the update to whether it matters rather than to the calendar,
-      do not help: they reduce updates but allow the hedge to go stale, and performance falls
-      steadily as the band widens.</p>
+      target. Drift bands tie the update to whether it matters rather than to the calendar. They do not help.
+      They reduce updates but let the hedge go stale, and performance falls steadily as the band
+      widens.</p>
     <p>Holding the ratio fixed is the one clearly bad choice. A constant 2.5 gives a Sharpe of 0.59
       against roughly 1.0 for any updating rule, so the decision that matters is whether to
       recalculate at all rather than how often.</p>
