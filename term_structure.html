@@ -241,7 +241,7 @@
     </div>
 
     <div class="bookrow">
-      <label class="chk"><input type="checkbox" id="vt"> Size to a risk target (run it as a book)</label>
+      <label class="chk"><input type="checkbox" id="vt"> Size to a risk target</label>
       <span class="mini" id="m-target" style="display:none">target vol <b><span id="tval">12</span>%</b>
         <input type="range" id="target" min="6" max="20" value="12" step="1"></span>
       <span class="mini" id="m-cost" style="display:none">cost <b><span id="cval">0.0</span>%/yr</b>
@@ -264,7 +264,7 @@
       <span><span class="swatch" style="background:var(--warn)"></span><span id="reflabel">naked short</span></span>
     </div>
     <div class="chartwrap"><canvas id="chart"></canvas><div class="tip" id="tip"></div></div>
-    <div class="ulabel">drawdown over time (how far below the peak you are)</div>
+    <div class="ulabel">Drawdown from peak</div>
     <canvas id="under"></canvas>
   </div>
 
@@ -379,9 +379,9 @@ var TS={"fut":{"dates":[20130520,20130521,20130522,20130523,20130524,20130528,20
     var f=state.wrap==='fut', h=+$('hedge').value/100, co=(f)&&$('contango').checked, s;
     var full=f?'Calendar spread.':'Short VXX, long '+state.mid+'.';
     if(h<0.12) s=f?'<b>Naked short volatility.</b> Full crash exposure.':'<b>Short VXX only.</b> Full crash exposure.';
-    else if(h<0.82) s='<b>Partial hedge.</b> Some of the crash still gets through.';
+    else if(h<0.82) s='<b>Partial hedge.</b> Part of the crash exposure remains.';
     else if(h<=1.18) s='<b>'+full+'</b> The crash is mostly hedged out.';
-    else s='<b>Over-hedged.</b> Now tilted long volatility.';
+    else s='<b>Over-hedged.</b> Net long volatility.';
     return s+((co&&f)?' Holding only when the curve is in contango.':'');
   }
 
