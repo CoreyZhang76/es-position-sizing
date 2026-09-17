@@ -144,53 +144,50 @@
 <div class="wrap">
   <div class="tiles">
     <div class="tile"><div class="n">0.89</div>
-      <div class="l">Accuracy of the call on whether the next ten seconds is busy</div></div>
+      <div class="l">Out-of-sample forecast accuracy, next ten seconds</div></div>
     <div class="tile"><div class="n">29%</div>
-      <div class="l">Less volatility traded through, by executing in the calm windows</div></div>
-    <div class="tile"><div class="n">&frac18;</div>
-      <div class="l">The crash exposure of an outright short, once hedged as a calendar spread</div></div>
+      <div class="l">Reduction in volatility traded through, by executing in calm windows</div></div>
+    <div class="tile"><div class="n">13%</div>
+      <div class="l">Crash exposure of an outright short, once hedged as a calendar spread</div></div>
   </div>
 
   <section>
     <h2>What works</h2>
     <ul>
-      <li><b>The forecaster.</b> It calls whether the next few seconds will be calm or busy, and
-        it is right often enough to act on, scoring 0.83 to 0.90 on real ES data it has not
-        seen.</li>
-      <li><b>Execution timing.</b> Waiting for the calm windows cuts the volatility an order trades
-        through by about 29%. That was confirmed on the real order book, and it stays a net saving
-        for orders up to roughly 0.5% of the day's volume.</li>
-      <li><b>VIX term structure.</b> Insurance against market falls is reliably overpriced. VIX
-        futures sit about 6 points above the volatility that actually arrives, on 91% of days.
-        Selling the front contract collects that, and takes the full crash with it. Holding a later
-        month against it collects a similar amount with roughly an eighth of the crash exposure. It
-        does not earn more per unit of risk, so the gain is in what it avoids rather than in what it
-        makes.</li>
-      <li><b>The two scales connect.</b> The intraday calm or busy call also works as a risk
-        filter on the much slower VIX trade. Stepping out of short volatility when it flags a busy
-        regime cuts the outright short's worst drawdown from &minus;89% to &minus;62%. It recognises
-        the dangerous regime. It does not predict which way the curve goes.</li>
+      <li><b>The forecaster.</b> Calls whether the next ten seconds will be calm or busy, scoring
+        0.83 to 0.90 out of sample on ES.</li>
+      <li><b>Execution timing.</b> Trading in the calm windows cuts the volatility an order passes
+        through by about 29%, and remains a net saving for orders up to roughly 0.5% of daily
+        volume.</li>
+      <li><b>VIX term structure.</b> VIX futures price about 6 points above the volatility that
+        follows, on 91% of days. Selling the front contract collects that premium and carries the
+        full equity crash. Holding a later month against it collects a similar premium at roughly an
+        eighth of the crash exposure, without earning more per unit of risk.</li>
+      <li><b>The two scales connect.</b> The intraday calm or busy call works as a risk filter on
+        the slower VIX trade. Stepping out of short volatility when it flags a busy regime cuts the
+        outright short's worst drawdown from &minus;89% to &minus;62%, by identifying the regime
+        rather than the direction.</li>
     </ul>
   </section>
 
   <section>
     <h2>What did not work</h2>
     <ul>
-      <li><b>Predicting direction.</b> The next move is predictable 88% of the time, but the move
-        is smaller than the bid-ask spread, so there is nothing left after costs.</li>
-      <li><b>Position sizing as a source of return.</b> It controls risk and drawdown. It does not
-        make more money.</li>
-      <li><b>Using VIX to forecast ES.</b> Adds nothing the ES order book does not already say.</li>
+      <li><b>Predicting direction.</b> Correct 88% of the time, but the move is smaller than the
+        bid-ask spread, so nothing survives costs.</li>
+      <li><b>Position sizing as a source of return.</b> It controls risk and drawdown without
+        increasing return.</li>
+      <li><b>Using VIX to forecast ES.</b> No incremental value over the ES order book.</li>
     </ul>
   </section>
 
   <section>
     <h2>Status</h2>
     <ul>
-      <li><b>Ready to use.</b> The forecaster, and a scheduler that routes orders into the calm
-        windows on ES.</li>
-      <li><b>Still needed.</b> Desk execution data, to convert the timing saving into dollars, and
-        more months of data to test it across different regimes.</li>
+      <li><b>Ready to use.</b> The forecaster, and a scheduler routing orders into calm windows on
+        ES.</li>
+      <li><b>Still needed.</b> Desk execution data to price the timing saving, and further months to
+        test across regimes.</li>
     </ul>
   </section>
 
